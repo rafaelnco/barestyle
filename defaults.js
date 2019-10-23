@@ -28,6 +28,11 @@ defaults.values = {
     horizontal: "row",
     vertical: "column"
   },
+  textAlign: {
+    left: "left",
+    center: "center",
+    right: "right"
+  },
   layout: {
     between: "space-between",
     around: "space-around",
@@ -62,6 +67,7 @@ defaults.rules = {
   vectors: { fill: ["fill"] },
   cursor: { cursor: ["cursor"] },
   borders: { border: ["border"] },
+  textAlign: { text: ["textAlign"] },
   shadow: { shadow: ["boxShadow"] },
   corners: { round: ["borderRadius"] },
   orientation: { "": ["flexDirection"] },
@@ -103,12 +109,14 @@ defaults.rules = {
 defaults.variants = ({ rules, values }) => ({
   flex: [rules.flex, values.flex],
   wrap: [values.wrap, rules.wrap],
-  vectors: [values.pallete, rules.vectors],
+  text: [values.text, rules.typography],
   layout: [rules.layout, values.layout],
   pointer: [values.pointer, rules.cursor],
+  vectors: [values.pallete, rules.vectors],
   overflow: [rules.overflow, values.overflow],
-  text: [values.text, rules.typography],
   typography: [values.font, rules.typography],
+  textAlign: [values.textAlign, rules.textAlign],
+  borderDecoration: [values.decoration, rules.borders],
   decoration: [values.decoration, rules.decoration],
   orientation: [values.orientation, rules.orientation],
   spacing: [values.spacing, rules.spacing, rules.sides],

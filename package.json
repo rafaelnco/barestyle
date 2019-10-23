@@ -1,6 +1,6 @@
 {
   "name": "barestyle",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A declarative variant generator",
   "main": "index.js",
   "scripts": {
