@@ -141,19 +141,62 @@ const proprietaryDefinitions = {
   
     Transformers are used to apply final transformations on constraints accumulated in the chain.
   */
+
+  function identify() {
+    let native = false
+    try { native = !!require("react-native") } catch (e) {}
+    return { native, web: !native }
+  }
+
+  const { native, web } = identify()
+
   transformers: props => [
     ...defaults.transformers(props),
 
-    /*  examples of transforming raw shadow values in styled rules */
+    /* defining cross platform borders definitions */
     {
-      parameters: ["shadow"],
-      transformation: ({ shadow }) => `0 0 ${unit(shadow)} royalblue`
+      parameters: ["border"],
+      transformation: ({ border, color }, { name }) => Object.assign({
+        [name+'Width']: unit(border),
+        [name+'Color']: '#333'
+      }, web && {
+        [name+'Style']: 'solid',
+      })
     },
 
-    /*  examples of combining border (dimension derivate) + color constraints */
+    /* combining border (dimension derivate) + color constraints */
     {
       parameters: ["border", "color"],
-      transformation: ({ border, color }) => `${unit(border)} solid ${color}`
+      transformation: ({ border, color }, { name }) => Object.assign({
+        [name+'Width']: unit(border),
+        [name+'Color']: color
+      }, web && {
+        [name+'Style']: 'solid',
+      })
+    },
+
+    /* transforming raw shadow values in styled rules */
+    {
+      parameters: ["shadow"],
+      transformation: ({ shadow }) => 
+        web && `0 0 ${unit(shadow)} #6666`
+        || ({
+          shadowRadius: unit(shadow),
+          shadowColor: '#6666',
+          elevation: unit(shadow)
+        })
+    },
+
+    /* combining shadow (dimension derivate) + color constraints */
+    {
+      parameters: ["shadow", "color"],
+      transformation: ({ shadow }) => 
+        web && `0 0 ${unit(shadow)} ${color}`
+        || ({
+          shadowRadius: unit(shadow),
+          shadowColor: color,
+          elevation: unit(shadow)
+        })
     },
 
     /*  transformation using styled components properties */
@@ -166,7 +209,7 @@ const proprietaryDefinitions = {
       `
     },
 
-    /*  examples of combining scale + color constraints to create color tone variations */
+    /* combining scale + color constraints to create color tone variations */
     {
       parameters: ["scale", "color"],
       transformation: ({ scale, color }) => {

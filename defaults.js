@@ -2,6 +2,12 @@ import { toHex, parseHex, paramCase } from "./utils";
 
 import { optional } from "./index";
 
+function identify() {
+  let native = false
+  try { native = !!require("react-native") } catch (e) {}
+  return { native, web: !native }
+}
+
 const defaults = { nominators: [paramCase] };
 
 defaults.types = {
@@ -106,6 +112,72 @@ defaults.rules = {
   }
 };
 
+defaults.transformers = ({ unit }) => {
+  const { native, web } = identify()
+  return [
+    {
+      parameters: ["border"],
+      transformation: ({ border, color }, { name }) => Object.assign({
+        [name+'Width']: unit(border),
+        [name+'Color']: '#333'
+      }, web && {
+        [name+'Style']: 'solid',
+      })
+    },
+    {
+      parameters: ["border", "color"],
+      transformation: ({ border, color }, { name }) => Object.assign({
+        [name+'Width']: unit(border),
+        [name+'Color']: color
+      }, web && {
+        [name+'Style']: 'solid',
+      })
+    },
+    {
+      parameters: ["shadow"],
+      transformation: ({ shadow }) => 
+        web && `0 0 ${unit(shadow)} #6666`
+        || ({
+          shadowRadius: unit(shadow),
+          shadowColor: '#6666',
+          elevation: unit(shadow)
+        })
+    },
+    {
+      parameters: ["shadow", "color"],
+      transformation: ({ shadow }) => 
+        web && `0 0 ${unit(shadow)} ${color}`
+        || ({
+          shadowRadius: unit(shadow),
+          shadowColor: color,
+          elevation: unit(shadow)
+        })
+    },
+    {
+      parameters: ["scale"],
+      transformation: ({ scale }) => unit(scale)
+    },
+    {
+      parameters: ["font"],
+      transformation: ({ font }) => unit(font)
+    },
+    {
+      parameters: ["spacing"],
+      transformation: ({ spacing }) => unit(spacing)
+    },
+    {
+      parameters: ["scale", "color"],
+      transformation: ({ scale, color }) => {
+        const intColors = parseHex(color);
+        const factor = 1 / scale;
+        const calculate = value => Math.min(255, Math.round(factor * value));
+        const calculated = intColors.map(calculate);
+        return `#${calculated.map(toHex).join("")}`;
+      }
+    }
+  ]
+};
+
 defaults.variants = ({ rules, values }) => ({
   flex: [rules.flex, values.flex],
   wrap: [values.wrap, rules.wrap],
@@ -125,46 +197,5 @@ defaults.variants = ({ rules, values }) => ({
   themes: [optional(values.dimension), values.pallete, rules.theme],
   borders: [values.border, optional(values.pallete), rules.borders, rules.sides]
 });
-
-defaults.transformers = ({ unit }) => [
-  {
-    parameters: ["border"],
-    transformation: ({ border }) => `${unit(border)} solid #333`
-  },
-  {
-    parameters: ["border", "color"],
-    transformation: ({ border, color }) => `${unit(border)} solid ${color}`
-  },
-  {
-    parameters: ["shadow"],
-    transformation: ({ shadow }) => `0 0 ${unit(shadow)} #6666`
-  },
-  {
-    parameters: ["shadow", "color"],
-    transformation: ({ shadow, color }) => `0 0 ${unit(shadow)} ${color}`
-  },
-  {
-    parameters: ["scale"],
-    transformation: ({ scale }) => unit(scale)
-  },
-  {
-    parameters: ["font"],
-    transformation: ({ font }) => unit(font)
-  },
-  {
-    parameters: ["spacing"],
-    transformation: ({ spacing }) => unit(spacing)
-  },
-  {
-    parameters: ["scale", "color"],
-    transformation: ({ scale, color }) => {
-      const intColors = parseHex(color);
-      const factor = 1 / scale;
-      const calculate = value => Math.min(255, Math.round(factor * value));
-      const calculated = intColors.map(calculate);
-      return `#${calculated.map(toHex).join("")}`;
-    }
-  }
-];
 
 export default defaults;

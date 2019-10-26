@@ -1,7 +1,7 @@
 {
   "name": "barestyle",
-  "version": "1.0.4",
-  "description": "A declarative variant generator",
+  "version": "1.0.5",
+  "description": "A declarative variant generator for React Components (web + native)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

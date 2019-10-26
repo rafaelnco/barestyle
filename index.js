@@ -27,12 +27,12 @@ const recursive = (constraints, stack = []) => {
   return recursive(constraints, extended);
 };
 
-const transform = (values, types, transformers) => {
+const transform = (values, types, transformers, property) => {
   const safeRead = value => (isString(value) ? types.string(value) : value);
   const safeValues = Object.assign({}, ...values.map(safeRead));
   const valuesKeys = Object.keys(safeValues);
   const apply = ({ parameters, transformation }) =>
-    arraysEqual(valuesKeys, parameters) && transformation(safeValues);
+    arraysEqual(valuesKeys, parameters) && transformation(safeValues, property);
   const transformed = transformers(types).map(apply);
   const result = transformed.filter(valid);
   if (result.length) return result[result.length - 1];
@@ -54,7 +54,11 @@ const generate = ({
   types = defaults.types
 }) => {
   const crunch = ({ property, value, variant }) => {
-    const apply = name => ({ [name]: transform(value, types, transformers) });
+    const apply = name => {
+      const result = transform(value, types, transformers, { name })
+      if(typeof result === 'object') return result
+      return ({ [name]: result })
+    };
     const values = Object.assign({}, ...properties(property).map(apply));
     const nominate = nominator => ({ [nominator(variant)]: values });
     return Object.assign({}, ...nominators.map(nominate));
