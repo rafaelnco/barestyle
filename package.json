@@ -1,11 +1,15 @@
 {
   "name": "barestyle",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A declarative variant generator",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "homepage": "https://github.com/rafaelnco/barestyle",
+  "bugs": {
+    "url" : "https://github.com/owner/project/issues"
+  },
+  "author": "rafaelnco (https://github.com/rafaelnco)",
   "license": "MIT"
 }
