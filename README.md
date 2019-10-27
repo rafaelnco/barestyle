@@ -22,8 +22,9 @@
     ...
 ```
 
-Online demo: https://rafaelnco.github.io/barestyle/
-Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
+## Online demo: https://rafaelnco.github.io/barestyle/
+
+## Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
 
 ## Getting started
 
