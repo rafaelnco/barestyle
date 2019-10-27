@@ -190,7 +190,7 @@ const proprietaryDefinitions = {
     /* combining shadow (dimension derivate) + color constraints */
     {
       parameters: ["shadow", "color"],
-      transformation: ({ shadow }) => 
+      transformation: ({ shadow, color }) => 
         web && `0 0 ${unit(shadow)} ${color}`
         || ({
           shadowRadius: unit(shadow),
