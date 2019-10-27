@@ -1,3 +1,5 @@
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="25%">
+
 # Bare Style - A declarative variant generator
 
 ## Introduction
@@ -8,7 +10,9 @@
 
 - ### Works on React JS and React Native
 
-## Installing
+Online demo: https://rafaelnco.github.io/barestyle/
+
+## Getting started
 
 ### 1. In your projects root folder, on your terminal:
 
