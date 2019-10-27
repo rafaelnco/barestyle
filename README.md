@@ -10,7 +10,20 @@
 
 - ### Works on React JS and React Native
 
+- ### Define components like this:
+
+```jsx
+  <Button
+    heavy-margin-top
+    secondary-background
+    primary-foreground
+    small-text
+    justify-start
+    ...
+```
+
 Online demo: https://rafaelnco.github.io/barestyle/
+Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
 
 ## Getting started
 
