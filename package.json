@@ -1,6 +1,6 @@
 {
   "name": "barestyle",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "A declarative variant generator for React Components (web + native)",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/rafaelnco/barestyle",
   "bugs": {
-    "url" : "https://github.com/owner/project/issues"
+    "url" : "https://github.com/rafaelnco/barestyle/issues"
   },
   "author": "rafaelnco (https://github.com/rafaelnco)",
   "license": "MIT"
