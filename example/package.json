@@ -1,7 +1,7 @@
 {
   "name": "barestyle-example",
   "version": "0.1.0",
-  "private": true,
+  "homepage": ".",
   "dependencies": {
     "barestyle": "^1.0.8",
     "react": "^16.10.2",
