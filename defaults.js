@@ -15,13 +15,14 @@ defaults.types = {
   color: color => ({ color }),
   scale: scale => ({ scale }),
   shadow: shadow => ({ shadow }),
+  percentile: percentile => ({ percentile }),
   border: border => ({ border }),
   string: string => ({ string }),
   font: font => ({ font }),
   spacing: spacing => ({ spacing })
 };
 
-const { color, scale } = defaults.types;
+const { color, scale, percentile } = defaults.types;
 
 defaults.values = {
   flex: { full: "1" },
@@ -55,17 +56,41 @@ defaults.values = {
   },
   scaling: {
     zero: scale(0),
+    oneTenth: scale(1/10),
+    ninth: scale(1/9),
+    eighth: scale(1/8),
     seventh: scale(1/7),
     sixth: scale(1/6),
     fifth: scale(1/5),
     fourth: scale(1/4),
     third: scale(1/3),
     half: scale(1/2),
-    full: scale(1),
-    double: scale(2),
-    triple: scale(3),
-    quadruple: scale(4),
-    quintuple: scale(5),
+    single: scale(1),
+    one: scale(1),
+    two: scale(2),
+    three: scale(3),
+    four: scale(4),
+    five: scale(5)
+  },
+  percentiles: {
+    zero: percentile(0),
+    tenth: percentile(0.1),
+    twenty: percentile(0.5),
+    quarter: percentile(0.25),
+    thirty: percentile(0.3),
+    forty: percentile(0.4),
+    fifthy: percentile(0.5),
+    sixty: percentile(0.6),
+    seventy: percentile(0.7),
+    seventyFive: percentile(0.75),
+    eighty: percentile(0.8),
+    ninety: percentile(0.9),
+    hundred: percentile(1),
+    full: percentile(1),
+    double: percentile(2),
+    triple: percentile(3),
+    quad: percentile(4),
+    quint: percentile(5),
   },
   pallete: {
     link: color("#2a7fff"),
@@ -94,8 +119,8 @@ defaults.rules = {
   decoration: { decoration: ["textDecoration"] },
   background: { background: ["backgroundColor"] },
   scaling: {
-    horizontal: ["width"],
-    vertical: ["height"],
+    width: ["width"],
+    height: ["height"],
     ratio: ["aspectRatio"]
   },
   typography: {
@@ -185,6 +210,10 @@ defaults.transformers = ({ unit }) => {
       transformation: ({ spacing }) => unit(spacing)
     },
     {
+      parameters: ["percentile"],
+      transformation: ({percentile}) => `${percentile * 100}%`
+    },
+    {
       parameters: ["scale", "color"],
       transformation: ({ scale, color }) => {
         const intColors = parseHex(color);
@@ -204,6 +233,7 @@ defaults.variants = ({ rules, values }) => ({
   layout: [rules.layout, values.layout],
   pointer: [values.pointer, rules.cursor],
   vectors: [values.pallete, rules.vectors],
+  percentile: [values.percentiles, rules.scaling],
   scaling: [values.scaling, rules.scaling],
   overflow: [rules.overflow, values.overflow],
   typography: [values.font, rules.typography],
