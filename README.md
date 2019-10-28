@@ -26,11 +26,11 @@
   //you can use camelCase simultaneously
   <Button
     heavy-margin-top
-    secondary-background
-    primaryForeground
     small-text
+    secondaryBackground
+    primaryForeground
     justifyStart
-    link-foreground={focused}
+    linkForeground={focused}
     ...
   />
 ```
