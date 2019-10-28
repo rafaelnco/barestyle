@@ -13,6 +13,9 @@
 - ### Define components like this:
 
 ```jsx
+  // enable or disable variants with a simple boolean
+  const focused = true
+
   <Button
     heavy-margin-top
     secondary-background
@@ -20,6 +23,7 @@
     small-text
     justify-start
     link-foreground={focused}
+    disabled-foreground={!focused}
     ...
   />
 
@@ -31,6 +35,7 @@
     primaryForeground
     justifyStart
     linkForeground={focused}
+    disabled-foreground={!focused}
     ...
   />
 ```
