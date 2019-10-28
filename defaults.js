@@ -53,6 +53,20 @@ defaults.values = {
     heavy: scale(1.5),
     heaviest: scale(2)
   },
+  scaling: {
+    zero: scale(0),
+    seventh: scale(1/7),
+    sixth: scale(1/6),
+    fifth: scale(1/5),
+    fourth: scale(1/4),
+    third: scale(1/3),
+    half: scale(1/2),
+    full: scale(1),
+    double: scale(2),
+    triple: scale(3),
+    quadruple: scale(4),
+    quintuple: scale(5),
+  },
   pallete: {
     link: color("#2a7fff"),
     success: color("#11cc11"),
@@ -79,6 +93,11 @@ defaults.rules = {
   orientation: { "": ["flexDirection"] },
   decoration: { decoration: ["textDecoration"] },
   background: { background: ["backgroundColor"] },
+  scaling: {
+    horizontal: ["width"],
+    vertical: ["height"],
+    ratio: ["aspectRatio"]
+  },
   typography: {
     text: ["fontSize"],
     font: ["fontStyle"],
@@ -185,6 +204,7 @@ defaults.variants = ({ rules, values }) => ({
   layout: [rules.layout, values.layout],
   pointer: [values.pointer, rules.cursor],
   vectors: [values.pallete, rules.vectors],
+  scaling: [values.scaling, rules.scaling],
   overflow: [rules.overflow, values.overflow],
   typography: [values.font, rules.typography],
   textAlign: [values.textAlign, rules.textAlign],
