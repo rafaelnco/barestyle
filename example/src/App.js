@@ -62,9 +62,11 @@ const Section = ({ TagType='div', hoverIn, hoverOut, pressIn, pressOut, style, .
   />
 }
 
-const Square = props => <Section triple-horizontal triple-vertical {...props} />
+const Square = props => <Section three-width three-height {...props} />
 
 const Text = props => <Section TagType="p" {...props} />
+
+const Image = props => <Section TagType="img" {...props} />
 
 const Button = ({...props}) => {
   const [state, setState] = useState({})
@@ -94,8 +96,8 @@ const samples = generate({constraints})
 export default () => {
   return <Section vertical>
     <Section lightest-filled-shadow justify-start>
-      <Section style={{width: unit(5)}}>
-        <img src={logo} style={{ height: '100%' }}/>
+      <Section five-height>
+        <Image src={logo} full-height/>
       </Section>
       <Section>
         <Text primary-foreground heavy-text>Bare Style</Text>
