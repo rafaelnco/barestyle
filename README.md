@@ -22,6 +22,8 @@
     primary-foreground
     small-text
     justify-start
+    full-height
+    half-width
     link-foreground={focused}
     disabled-foreground={!focused}
     ...
@@ -34,6 +36,8 @@
     secondaryBackground
     primaryForeground
     justifyStart
+    full-height
+    half-width
     linkForeground={focused}
     disabled-foreground={!focused}
     ...
