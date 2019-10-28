@@ -62,11 +62,7 @@ const Section = ({ TagType='div', hoverIn, hoverOut, pressIn, pressOut, style, .
   />
 }
 
-const Square = ({ size = 10, style, ...props }) =>
-  <Section
-    style={{ width: unit(size), height: unit(size), ...style }}
-    {...props}
-  />
+const Square = props => <Section triple-horizontal triple-vertical {...props} />
 
 const Text = props => <Section TagType="p" {...props} />
 
