@@ -19,7 +19,20 @@
     primary-foreground
     small-text
     justify-start
+    link-foreground={focused}
     ...
+  />
+
+  //you can use camelCase simultaneously
+  <Button
+    heavy-margin-top
+    secondary-background
+    primaryForeground
+    small-text
+    justifyStart
+    link-foreground={focused}
+    ...
+  />
 ```
 
 ## Online demo: https://rafaelnco.github.io/barestyle/
