@@ -1,3 +1,10 @@
+
+function identify() {
+  let native = false
+  try { native = !!require("react-native") } catch (e) {}
+  return { native, web: !native }
+}
+
 function arraysEqual(_a, _b) {
   const a = _a.sort();
   const b = _b.sort();
@@ -40,14 +47,15 @@ const isString = unknown => typeof unknown === "string";
 const isFunction = unknown => typeof unknown === "function";
 
 export {
+  valid,
   toHex,
   parseHex,
   hexRegex,
   paramCase,
   camelCase,
   titleCase,
-  valid,
   arraysEqual,
   isString,
-  isFunction
+  isFunction,
+  identify
 };
