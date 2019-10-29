@@ -12,15 +12,24 @@ const defaults = { nominators: [paramCase] };
 
 defaults.types = {
   unit: value => `${value}rem`,
-  font: font => ({ font }),
-  color: color => ({ color }),
   scale: scale => ({ scale }),
+  font: font => ({ font }),
+  flex: flex => ({ flex }),
+  color: color => ({ color }),
   shadow: shadow => ({ shadow }),
   border: border => ({ border }),
   string: string => ({ string }),
   spacing: spacing => ({ spacing }),
   percentile: percentile => ({ percentile }),
 };
+
+defaults.types.unit.base = 'scaling'
+defaults.types.flex.base = 'scaling'
+defaults.types.font.base = 'dimension'
+defaults.types.color.base = 'dimension'
+defaults.types.shadow.base = 'dimension'
+defaults.types.border.base = 'dimension'
+defaults.types.spacing.base = 'dimension'
 
 const { color, scale, percentile } = defaults.types;
 
@@ -122,7 +131,6 @@ defaults.values = {
 };
 
 defaults.rules = {
-  flex: { "": ["flex"] },
   wrap: { "": ["flexWrap"] },
   vectors: { fill: ["fill"] },
   cursor: { cursor: ["cursor"] },
@@ -159,6 +167,12 @@ defaults.rules = {
     "": ["overflow"],
     vertical: ["overflowY"],
     horizontal: ["overflowX"]
+  },
+  flex: {
+    "": ["flex"],
+    grow: ["flexGrow"],
+    shrink: ["flexShrink"],
+    base: ["flexBase"]
   },
   sides: {
     "": [""],
@@ -217,6 +231,10 @@ defaults.transformers = ({ unit }) => {
       transformation: ({ scale }) => unit(scale)
     },
     {
+      parameters: ["flex"],
+      transformation: ({ flex }) => flex
+    },
+    {
       parameters: ["font"],
       transformation: ({ font }) => unit(font)
     },
@@ -250,6 +268,7 @@ defaults.variants = ({ rules, values }) => ({
   vectors: [values.pallete, rules.vectors],
   percentile: [values.percentiles, rules.scaling],
   scaling: [values.scaling, rules.scaling],
+  flexScaling: [values.flex, rules.flex],
   dimension: [values.dimension, rules.scaling],
   overflow: [rules.overflow, values.overflow],
   typography: [values.font, rules.typography],
