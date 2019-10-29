@@ -110,7 +110,7 @@ export default () => {
               Object.keys(samples).slice(
                 Object.keys(values.pallete).length*index,
                 (index+1)*Object.keys(values.pallete).length
-              ).map(sample => <Button lightest-link-border-bottom lightest-alert-border-left key={sample} {...{[sample]: true}} />)
+              ).map(sample => <Button two-grow lightest-link-border-bottom lightest-alert-border-left key={sample} {...{[sample]: true}} />)
             }
           </Section>
         ))
