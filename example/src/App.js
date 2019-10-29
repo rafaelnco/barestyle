@@ -72,7 +72,6 @@ const Button = ({...props}) => {
   const [state, setState] = useState({})
   const {pressed, hovered, animating} = state;
   return <Square
-    size={3}
     lightest-filled-shadow={!pressed}
     lightest-link-shadow={pressed}
     lightest-round
