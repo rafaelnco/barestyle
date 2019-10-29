@@ -12,14 +12,14 @@ const defaults = { nominators: [paramCase] };
 
 defaults.types = {
   unit: value => `${value}rem`,
+  font: font => ({ font }),
   color: color => ({ color }),
   scale: scale => ({ scale }),
   shadow: shadow => ({ shadow }),
-  percentile: percentile => ({ percentile }),
   border: border => ({ border }),
   string: string => ({ string }),
-  font: font => ({ font }),
-  spacing: spacing => ({ spacing })
+  spacing: spacing => ({ spacing }),
+  percentile: percentile => ({ percentile }),
 };
 
 const { color, scale, percentile } = defaults.types;
@@ -56,15 +56,32 @@ defaults.values = {
   },
   scaling: {
     zero: scale(0),
+
+    oneTwenth: scale(1/20),
+
     oneTenth: scale(1/10),
     oneNinth: scale(1/9),
     oneEighth: scale(1/8),
     oneSeventh: scale(1/7),
+
+    fiveSixths: scale(5/6),
     oneSixth: scale(1/6),
+
+    fourFifths: scale(4/5),
+    threeFifths: scale(3/5),
+    twoFifths: scale(2/5),
     oneFifth: scale(1/5),
+
+    threeFourths: scale(3/4),
+    twoFourths: scale(2/4),
     oneFourth: scale(1/4),
+
+    threeThirds: scale(3/3),
+    twoThirds: scale(2/3),
     oneThird: scale(1/3),
+
     oneHalf: scale(1/2),
+
     one: scale(1),
     two: scale(2),
     three: scale(3),
@@ -73,25 +90,22 @@ defaults.values = {
   },
   percentiles: {
     zero: percentile(0),
+    twoAHalf: percentile(0.025),
+    fifth: percentile(0.05),
     tenth: percentile(0.1),
-    twenty: percentile(0.5),
+    fifteenth: percentile(0.15),
     quarter: percentile(0.25),
-    thirty: percentile(0.3),
-    forty: percentile(0.4),
-    fifthy: percentile(0.5),
     half: percentile(0.5),
-    sixty: percentile(0.6),
-    seventy: percentile(0.7),
-    seventyFive: percentile(0.75),
-    eighty: percentile(0.8),
-    ninety: percentile(0.9),
+    threeQuarters: percentile(0.75),
     hundred: percentile(1),
     full: percentile(1),
     single: percentile(1),
+    oneAHalf: percentile(1.5),
     double: percentile(2),
+    doubleAHalf: percentile(2.5),
     triple: percentile(3),
-    quad: percentile(4),
-    quint: percentile(5),
+    quadruple: percentile(4),
+    quintuple: percentile(5),
   },
   pallete: {
     link: color("#2a7fff"),
