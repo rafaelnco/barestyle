@@ -76,7 +76,7 @@ const generator = (proprietary = {}) => {
   const rules = Object.assign({}, defaults.rules, proprietary.rules);
   const types = Object.assign({}, defaults.types, proprietary.types);
   const values = Object.assign({}, defaults.values, proprietary.values);
-  const derivate = type => ({ [type]: convert(values.dimension, types[type]) });
+  const derivate = type => !types[type].base && types[type] || ({ [type]: convert(values[types[type].base], types[type]) });
   Object.assign(values, ...Object.keys(types).map(derivate));
   const variantGenerator = proprietary.variants || defaults.variants;
   const variants = variantGenerator({ rules, values });
