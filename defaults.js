@@ -250,6 +250,7 @@ defaults.variants = ({ rules, values }) => ({
   vectors: [values.pallete, rules.vectors],
   percentile: [values.percentiles, rules.scaling],
   scaling: [values.scaling, rules.scaling],
+  dimension: [values.dimension, rules.scaling],
   overflow: [rules.overflow, values.overflow],
   typography: [values.font, rules.typography],
   textAlign: [values.textAlign, rules.textAlign],
