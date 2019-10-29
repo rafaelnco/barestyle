@@ -1,29 +1,42 @@
-import { toHex, parseHex, paramCase } from "./utils";
+import { toHex, parseHex, paramCase, identify } from "./utils";
 
 import { optional } from "./index";
 
-function identify() {
-  let native = false
-  try { native = !!require("react-native") } catch (e) {}
-  return { native, web: !native }
-}
+/* default declarations to quick start */
+const defaults = {
 
-const defaults = { nominators: [paramCase] };
+  /* nominators combine properties names into a variant name */
+  nominators: [paramCase]
 
+};
+
+/* types are one type of constraints */
 defaults.types = {
+
+  /* root types used in final transformations */
   unit: value => `${value}rem`,
+
+  /* values declarations too are used as types */
   scale: scale => ({ scale }),
+  string: string => ({ string }),
+  percentile: percentile => ({ percentile }),
+
+  /* derived types require a base type declaration */
   font: font => ({ font }),
   flex: flex => ({ flex }),
   color: color => ({ color }),
   shadow: shadow => ({ shadow }),
   border: border => ({ border }),
-  string: string => ({ string }),
   spacing: spacing => ({ spacing }),
-  percentile: percentile => ({ percentile }),
+
 };
 
-defaults.types.unit.base = 'scaling'
+/*
+  Base types values names are used to generate variant names:
+
+  `dimension: { lightest: scale(0.2), light: scale(0.5), ...`
+  lightest-padding, light-border, normal-margin ...
+*/
 defaults.types.flex.base = 'scaling'
 defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
@@ -31,8 +44,25 @@ defaults.types.shadow.base = 'dimension'
 defaults.types.border.base = 'dimension'
 defaults.types.spacing.base = 'dimension'
 
+/* always use types to define values constraints */
 const { color, scale, percentile } = defaults.types;
 
+/*
+  Values constraints names are used to generate variant names
+
+  `decoration: { no: "none" },`
+  no-border
+  
+  `overflow: { flow: "auto" },`
+  flow-horizontal, flow-vertical...
+
+  `dimension: { lightest: scale(0.2), light: scale(0.5), ...`
+  lightest-padding, light-border, normal-margin ...
+
+
+  `pallete: { link: color("#2a7fff"), success: color("#11cc11"), ...`
+  link-foreground, success-background...
+*/
 defaults.values = {
   flex: { full: "1" },
   wrap: { wrap: "wrap" },
@@ -130,6 +160,28 @@ defaults.values = {
   }
 };
 
+/* 
+  Rules constraints properties and can also be combined
+
+  `wrap: { "": ["flexWrap"] },`
+  empty rules names ("") are to be applied without mention
+  therefore all wrap values names are single named variants
+  <C wrap ... >
+
+  `cursor: { cursor: ["cursor"] },`
+  <C cursor-pointer >
+
+  `shadow: { shadow: ["boxShadow"] },`
+  <C primary-shadow ...
+
+
+  `flex: { "": ["flex"], grow: ["flexGrow"], shrink: ["flexShrink"] ...`
+  <C one-grow /><C two-grow /><C horizontal />
+
+  `sides: { "": [""], top: ["Top"], left: ["Left"],...`
+  <C padding-left margin border-bottom ...
+
+*/
 defaults.rules = {
   wrap: { "": ["flexWrap"] },
   vectors: { fill: ["fill"] },
@@ -185,6 +237,42 @@ defaults.rules = {
   }
 };
 
+/*
+
+  Transformations are applied after variations generation
+
+  `parameters: [...]` are used to match variations with the right transformations
+
+  It's possible to derive complex values by combining simple values, as in:
+
+  ```
+    {
+      parameters: ["scale", "color"],
+      transformation: ({ scale, color }) => {
+        ...
+        return `#${calculated.map(toHex).join("")}`;
+      }
+  ```
+
+  This transformations applies to variants that combine scale and color values:
+
+    light-link-foreground heavy-primary-background ...
+
+  It's possible to branch between different style notations
+
+  ```
+    {
+      parameters: ["shadow"],
+      transformation: ({ shadow }) => 
+        web && `0 0 ${unit(shadow)} #6666`
+        || native && ({
+          shadowRadius: unit(shadow),
+          shadowColor: '#6666',
+          elevation: unit(shadow)
+        })
+    },`
+  ```
+*/
 defaults.transformers = ({ unit }) => {
   const { native, web } = identify()
   return [
@@ -259,6 +347,33 @@ defaults.transformers = ({ unit }) => {
   ]
 };
 
+/*
+  These are default variants that cover some basic styles to quick start development
+
+  `shadow: [values.shadow, optional(values.pallete), rules.shadow],`
+
+    values.shadow: lightest, light, normal...
+    values.pallete: link, success, primary...
+    rules.shadow: shadow
+
+    lightest-shadow light-success-shadow normal-primary-shadow ...
+
+  `borderDecoration: [values.decoration, rules.borders],`
+
+    values.decotation: no
+    rules.borders: border
+
+    no-border
+
+  `borders: [values.border, optional(values.pallete), rules.borders, rules.sides]`
+
+    values.border: lightest, light, normal... (base = dimension)
+    values.pallete: link, primary ...
+    rules.borders: border
+    rules.sides: left, top, vertical ...
+
+    light-primary-border-top lightest-link-border-vertical ...
+*/
 defaults.variants = ({ rules, values }) => ({
   flex: [rules.flex, values.flex],
   wrap: [values.wrap, rules.wrap],
