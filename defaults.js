@@ -37,7 +37,7 @@ defaults.types = {
   `dimension: { lightest: scale(0.2), light: scale(0.5), ...`
   lightest-padding, light-border, normal-margin ...
 */
-defaults.types.flex.base = 'scaling'
+defaults.types.flex.base = 'percentile'
 defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
 defaults.types.shadow.base = 'dimension'
@@ -64,7 +64,6 @@ const { color, scale, percentile } = defaults.types;
   link-foreground, success-background...
 */
 defaults.values = {
-  flex: { full: "1" },
   wrap: { wrap: "wrap" },
   text: { italic: "italic" },
   overflow: { flow: "auto" },
@@ -221,7 +220,7 @@ defaults.rules = {
     horizontal: ["overflowX"]
   },
   flex: {
-    "": ["flex"],
+    "": ["flexGrow"],
     grow: ["flexGrow"],
     shrink: ["flexShrink"],
     base: ["flexBase"]
@@ -375,7 +374,7 @@ defaults.transformers = ({ unit }) => {
     light-primary-border-top lightest-link-border-vertical ...
 */
 defaults.variants = ({ rules, values }) => ({
-  flex: [rules.flex, values.flex],
+  flex: [values.flex, rules.flex],
   wrap: [values.wrap, rules.wrap],
   text: [values.text, rules.typography],
   layout: [rules.layout, values.layout],
@@ -383,7 +382,6 @@ defaults.variants = ({ rules, values }) => ({
   vectors: [values.pallete, rules.vectors],
   percentile: [values.percentiles, rules.scaling],
   scaling: [values.scaling, rules.scaling],
-  flexScaling: [values.flex, rules.flex],
   dimension: [values.dimension, rules.scaling],
   overflow: [rules.overflow, values.overflow],
   typography: [values.font, rules.typography],
