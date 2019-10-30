@@ -1,6 +1,6 @@
 {
   "name": "barestyle",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A declarative variant generator for React Components (web + native)",
   "main": "index.js",
   "scripts": {
