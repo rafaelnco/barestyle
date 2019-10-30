@@ -98,170 +98,176 @@ const unit = value => `${value}vmax`;
 const variations = {};
 
 /* Proprietary Definitions that vary between projects */
-const proprietaryDefinitions = {
+const proprietaryDefinitions = {}
 
-  /* Types are derivated from values.dimension scale (will be changed in v2) and can be combined in Transformations. Types can also apply their own transformations */
-  types: {
-    spacing: spacing => ({ 
-      spacing: 5 * spacing
-    }),
-    border: border => ({ border }),
-    string: string => ({ string }),
-    font: font => ({ font }),
-    unit
-  },
-
-  /* Values are primary constants used to define style property values in the resulting variants */
-  values: {
-    dimension: {
-      sub: scale(0.2),
-      small: scale(0.5),
-      normal: scale(1),
-      big: scale(1.5),
-      bigger: scale(2),
-      giant: scale(2.5),
-      monumental: scale(5)
-    },
-    pallete: {
-      link: color("#4169e1"),
-      success: color("#11cc11"),
-      alert: color("#ff1111"),
-      attention: color("#ffcc00"),
-      primary: color("#000000"),
-      secondary: color("#ffffff"),
-      filled: color("#222222"),
-      disabled: color("#555555"),
-      empty: color("#eeeeee"),
-      transparent: color("#00000000")
-    }
-  },
-
-  /* Variants are combinations of constraints from which variant style property names and values are going to be generated.
-  
-  Note that Types are also Constraints and referenced by name (as in values.font, values.shadow).
-  
-  Take a look at barestyle/defaults.js
-  */
-  variants: ({ rules, values }) => ({
-    ...defaults.variants({ rules, values }),
-
-    /*
-      combine pallete values names (primary, secondary...) + vector rules names (fill) generating variants like:
-      primary-fill
-      secondary-fill
-      ...
-    */
-    vectors: [values.pallete, rules.vectors],
-
-    /* combine scaling + fontSize generating variants like: small-text, heavy-text */
-    typography: [values.font, rules.typography],
-
-    /* generates:
-      <Section horizontal> ...
-      <Section vertical> */
-    orientation: [values.orientation, rules.orientation],
-
-    /* generates:
-      light-primary-shadow
-      heavy-shadow
-      ...
-    */
-    shadow: [values.shadow, optional(values.pallete), rules.shadow],
-
-    /*generates:
-      light-primary-border
-      heavy-secondary-border-bottom
-      normal-border-left
-      ...
-    */
-    borders: [values.border, optional(values.pallete), rules.borders, rules.sides]
+/* Types are derivated from values.dimension scale (will be changed in v2) and can be combined in Transformations. Types can also apply their own transformations */
+proprietaryDefinitions.types = {
+  /* derived types require a base type declaration */
+  spacing: spacing => ({ 
+    spacing: 5 * spacing
   }),
+  border: border => ({ border }),
+  font: font => ({ font }),
 
-  /* 
-  
-    Transformers are used to apply final transformations on constraints accumulated in the chain.
-  */
+  string: string => ({ string }),
+  unit
+}
 
-  function identify() {
-    let native = false
-    try { native = !!require("react-native") } catch (e) {}
-    return { native, web: !native }
+/* base type declaration */
+proprietaryDefinitions.types.font.base = 'dimension'
+proprietaryDefinitions.types.border.base = 'dimension'
+proprietaryDefinitions.types.spacing.base = 'dimension'
+
+/* Values are primary constants used to define style property values in the resulting variants */
+proprietaryDefinitions.values = {
+  dimension: {
+    sub: scale(0.2),
+    small: scale(0.5),
+    normal: scale(1),
+    big: scale(1.5),
+    bigger: scale(2),
+    giant: scale(2.5),
+    monumental: scale(5)
+  },
+  pallete: {
+    link: color("#4169e1"),
+    success: color("#11cc11"),
+    alert: color("#ff1111"),
+    attention: color("#ffcc00"),
+    primary: color("#000000"),
+    secondary: color("#ffffff"),
+    filled: color("#222222"),
+    disabled: color("#555555"),
+    empty: color("#eeeeee"),
+    transparent: color("#00000000")
   }
+}
 
-  const { native, web } = identify()
+/* Variants are combinations of constraints from which variant style property names and values are going to be generated.
 
-  transformers: props => [
-    ...defaults.transformers(props),
+Note that Types are also Constraints and referenced by name (as in values.font, values.shadow).
 
-    /* defining cross platform borders definitions */
-    {
-      parameters: ["border"],
-      transformation: ({ border, color }, { name }) => Object.assign({
-        [name+'Width']: unit(border),
-        [name+'Color']: '#333'
-      }, web && {
-        [name+'Style']: 'solid',
+Take a look at barestyle/defaults.js
+*/
+proprietaryDefinitions.variants = ({ rules, values }) => ({
+  ...defaults.variants({ rules, values }),
+
+  /*
+    combine pallete values names (primary, secondary...) + vector rules names (fill) generating variants like:
+    primary-fill
+    secondary-fill
+    ...
+  */
+  vectors: [values.pallete, rules.vectors],
+
+  /* combine scaling + fontSize generating variants like: small-text, heavy-text */
+  typography: [values.font, rules.typography],
+
+  /* generates:
+    <Section horizontal> ...
+    <Section vertical> */
+  orientation: [values.orientation, rules.orientation],
+
+  /* generates:
+    light-primary-shadow
+    heavy-shadow
+    ...
+  */
+  shadow: [values.shadow, optional(values.pallete), rules.shadow],
+
+  /*generates:
+    light-primary-border
+    heavy-secondary-border-bottom
+    normal-border-left
+    ...
+  */
+  borders: [values.border, optional(values.pallete), rules.borders, rules.sides]
+})
+
+/* 
+
+  Transformers are used to apply final transformations on constraints accumulated in the chain.
+*/
+
+function identify() {
+  let native = false
+  try { native = !!require("react-native") } catch (e) {}
+  return { native, web: !native }
+}
+
+const { native, web } = identify()
+
+proprietaryDefinitions.transformers: props => [
+  ...defaults.transformers(props),
+
+  /* defining cross platform borders definitions */
+  {
+    parameters: ["border"],
+    transformation: ({ border, color }, { name }) => Object.assign({
+      [name+'Width']: unit(border),
+      [name+'Color']: '#333'
+    }, web && {
+      [name+'Style']: 'solid',
+    })
+  },
+
+  /* combining border (dimension derivate) + color constraints */
+  {
+    parameters: ["border", "color"],
+    transformation: ({ border, color }, { name }) => Object.assign({
+      [name+'Width']: unit(border),
+      [name+'Color']: color
+    }, web && {
+      [name+'Style']: 'solid',
+    })
+  },
+
+  /* transforming raw shadow values in styled rules */
+  {
+    parameters: ["shadow"],
+    transformation: ({ shadow }) => 
+      web && `0 0 ${unit(shadow)} #6666`
+      || ({
+        shadowRadius: unit(shadow),
+        shadowColor: '#6666',
+        elevation: unit(shadow)
       })
-    },
+  },
 
-    /* combining border (dimension derivate) + color constraints */
-    {
-      parameters: ["border", "color"],
-      transformation: ({ border, color }, { name }) => Object.assign({
-        [name+'Width']: unit(border),
-        [name+'Color']: color
-      }, web && {
-        [name+'Style']: 'solid',
+  /* combining shadow (dimension derivate) + color constraints */
+  {
+    parameters: ["shadow", "color"],
+    transformation: ({ shadow, color }) => 
+      web && `0 0 ${unit(shadow)} ${color}`
+      || ({
+        shadowRadius: unit(shadow),
+        shadowColor: color,
+        elevation: unit(shadow)
       })
-    },
+  },
 
-    /* transforming raw shadow values in styled rules */
-    {
-      parameters: ["shadow"],
-      transformation: ({ shadow }) => 
-        web && `0 0 ${unit(shadow)} #6666`
-        || ({
-          shadowRadius: unit(shadow),
-          shadowColor: '#6666',
-          elevation: unit(shadow)
-        })
-    },
+  /*  transformation using styled components properties */
+  {
+    parameters: ["border", "color"],
+    transformation: ({ border, color }) => `;
+      borderWidth: ${unit(border)};
+      borderStyle: solid;
+      borderColor: ${color};
+    `
+  },
 
-    /* combining shadow (dimension derivate) + color constraints */
-    {
-      parameters: ["shadow", "color"],
-      transformation: ({ shadow, color }) => 
-        web && `0 0 ${unit(shadow)} ${color}`
-        || ({
-          shadowRadius: unit(shadow),
-          shadowColor: color,
-          elevation: unit(shadow)
-        })
-    },
-
-    /*  transformation using styled components properties */
-    {
-      parameters: ["border", "color"],
-      transformation: ({ border, color }) => `;
-        borderWidth: ${unit(border)};
-        borderStyle: solid;
-        borderColor: ${color};
-      `
-    },
-
-    /* combining scale + color constraints to create color tone variations */
-    {
-      parameters: ["scale", "color"],
-      transformation: ({ scale, color }) => {
-        const intColors = parseHex(color);
-        const factor = 1 / scale;
-        const calculate = value => Math.min(255, Math.round(factor * value));
-        const calculated = intColors.map(calculate);
-        return `#${calculated.map(toHex).join("")}`;
-      }
+  /* combining scale + color constraints to create color tone variations */
+  {
+    parameters: ["scale", "color"],
+    transformation: ({ scale, color }) => {
+      const intColors = parseHex(color);
+      const factor = 1 / scale;
+      const calculate = value => Math.min(255, Math.round(factor * value));
+      const calculated = intColors.map(calculate);
+      return `#${calculated.map(toHex).join("")}`;
     }
-  ]
-};
+  }
+]
 
 /* Method used to filter enabled variants and apply them to components */
 const applyVariations = props => applyAll(variations, props);
