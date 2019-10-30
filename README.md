@@ -4,16 +4,16 @@
 
 ## Summary
 
-- [Introduction](#Introduction)
-- [Getting Started](#Getting-Started)
-- [Changelog](#Changelog)
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+- [Changelog](#changelog)
 
 Online demo: https://rafaelnco.github.io/barestyle/
 
 Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
 
 ## Introduction
-[Back](#Summary)
+[Back](#summary)
 
 - You define the constraints, Bare Style creates the style variations 
 
@@ -51,7 +51,7 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
 ```
 
 ## Getting started
-[Back](#Summary)
+[Back](#summary)
 
 ### 1. In your projects root folder, on your terminal:
 
@@ -339,7 +339,7 @@ export const Text = styled.Text`
 
 ```
 
-### 3. In your component instantiation
+### 4. In your component instantiation
 
 Once you grasp the variant declaration syntax it'll be easy to compose new variant definitions
 
@@ -412,7 +412,7 @@ export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 ```
 
 ## Changelog
-[Back](#Summary)
+[Back](#summary)
 
 > Empty rows were either documentation/example updating
 
