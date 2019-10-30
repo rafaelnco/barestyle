@@ -1,54 +1,57 @@
 <img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="25%">
 
-# Bare Style - A declarative variant generator
+# [Bare Style - A declarative variant generator](https://rafaelnco.github.io/barestyle/)
+
+## Summary
+
+- [Introduction](#Introduction)
+- [Getting Started](#Getting-Started)
+- [Changelog](#Changelog)
+
+Online demo: https://rafaelnco.github.io/barestyle/
+
+Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
 
 ## Introduction
+[Back](#Summary)
 
-- ### You define the constraints, Bare Style creates the style variations 
+- You define the constraints, Bare Style creates the style variations 
 
-- ### Works with and without Styled System/Components
+- Works with and without Styled System/Components
 
-- ### Works on React JS and React Native
+- Works on React JS and React Native
 
-- ### Define components like this:
+- Define components like this:
 
 ```jsx
   // enable or disable variants with a simple boolean
   const focused = true
 
+  //you can configure barestyle use camelCase and param-case simultaneously
   <Button
     heavy-margin-top
-    secondary-background
-    primary-foreground
-    small-text
-    justify-start
-    full-height
-    half-width
-    link-foreground={focused}
-    disabled-foreground={!focused}
-    ...
-  />
+    light-padding-vertical
 
-  //you can use camelCase simultaneously
-  <Button
-    heavy-margin-top
-    small-text
+    light-text
+    heavy-text
+
     secondaryBackground
-    primaryForeground
-    justifyStart
-    full-height
-    half-width
+    primary-foreground
     linkForeground={focused}
     disabled-foreground={!focused}
+
+    justifyStart
+    align-center
+
+    full-height
+    half-width
+
     ...
   />
 ```
 
-## Online demo: https://rafaelnco.github.io/barestyle/
-
-## Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
-
 ## Getting started
+[Back](#Summary)
 
 ### 1. In your projects root folder, on your terminal:
 
@@ -407,3 +410,33 @@ const Path = props => <BareComponent
 
 export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 ```
+
+## Changelog
+[Back](#Summary)
+
+> Empty rows were either documentation/example updating
+
+Version|Description|Breaking Change
+-|---|---
+1.2.2||
+1.2.1|Add base types, Add default flex variants|Derived types require base type declaration
+1.2.0|Add default dimension variants|
+1.1.9||
+1.1.8|Add default percentile variants|
+1.1.7|Add default scaling variants|
+1.1.6||
+1.1.5||
+1.1.4||
+1.1.3||
+1.1.2||
+1.1.1||
+1.1.0||
+1.0.9||
+1.0.7||
+1.0.6||
+1.0.5|Add platform aware default transformations|
+1.0.4||
+1.0.3|Add text alignment default variations|
+1.0.2||
+1.0.1||
+1.0.0|First version|
