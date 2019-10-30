@@ -37,7 +37,7 @@ defaults.types = {
   `dimension: { lightest: scale(0.2), light: scale(0.5), ...`
   lightest-padding, light-border, normal-margin ...
 */
-defaults.types.flex.base = 'percentile'
+defaults.types.flex.base = 'percentiles'
 defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
 defaults.types.shadow.base = 'dimension'
