@@ -223,7 +223,7 @@ defaults.rules = {
     "": ["flexGrow"],
     grow: ["flexGrow"],
     shrink: ["flexShrink"],
-    base: ["flexBase"]
+    basis: ["flexBasis"]
   },
   sides: {
     "": [""],
