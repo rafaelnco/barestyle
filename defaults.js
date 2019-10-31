@@ -220,7 +220,8 @@ defaults.rules = {
     horizontal: ["overflowX"]
   },
   flex: {
-    "": ["flexGrow"],
+    "": ["flex"],
+    flex: ["flex"],
     grow: ["flexGrow"],
     shrink: ["flexShrink"],
     basis: ["flexBasis"]
