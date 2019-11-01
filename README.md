@@ -27,34 +27,23 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
   // enable or disable variants with a simple boolean
   const focused = true
 
-  //you can configure barestyle use camelCase and param-case simultaneously
-  <Button
-    heavy-margin-top
-    light-padding-vertical
+  Button.Primary = <Button primary-background />
 
-    light-text
-    heavy-text
-
-    secondaryBackground
-    primary-foreground
+  <Button.Primary
     linkForeground={focused}
     disabled-foreground={!focused}
-
-    justifyStart
-    align-center
-
-    full-height
-    half-width
-
-    flex
-    block
-
-    double-grow
-    single-flex
-
-    ...
   />
-```
+
+  //barestyle understand different cases
+  <Container justifyStart align-center full-height horizontal />
+
+  <Container half-width flex vertical double-grow />
+
+  Container.Row = <Container full-width horizontal />
+
+  Text.Heading = <Text primary-foreground large-text />
+
+  ...
 
 ## Getting started
 [Back](#summary)
