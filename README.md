@@ -44,7 +44,7 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
   Text.Heading = <Text primary-foreground large-text />
 
   ...
-
+```
 ## Getting started
 [Back](#summary)
 
