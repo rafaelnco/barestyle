@@ -32,34 +32,66 @@ const variations = generator({
 
 console.log(variations)
 
-const Section = ({ TagType='div', hoverIn, hoverOut, pressIn, pressOut, style, ...props }) => {
+function useMouse({hoverIn, hoverOut, pressIn, pressOut}) {
   const [pressed, setPressed] = useState(false)
-  return <TagType
-    onMouseEnter={() => {
+  return {
+    onMouseEnter: () => {
       if(hoverIn) hoverIn()
-    }}
-    onMouseDown={() => {
+    },
+    onMouseDown: () => {
       if(pressIn) pressIn()
       setPressed(true)
-    }}
-    onMouseUp={() => {
+    },
+    onMouseUp: () => {
       if(pressed && pressOut) pressOut()
       setPressed(false)
-    }}
-    onMouseLeave={() => {
+    },
+    onMouseLeave: () => {
       if(pressed) {
         //if(pressOut) pressOut()
         setPressed(false)
       }
       if(hoverOut) hoverOut()
-    }}
-    style={Object.assign(
-      { display: 'flex' },
-      applyAll(variations, props),
-      style
-    )}
-    {...props}
+    },
+  }
+}
+
+function useReaction() {
+  const [state, setState] = useState({})
+  const {pressed, hovered, animating} = state;
+  return {
+    state,
+    props: {
+      pressIn: () => setState({ animating, pressed: true }),
+      pressOut: () => setState({ animating: !animating, hovered }),
+      hoverIn: () => setState({ animating: !animating, hovered: true }),
+      hoverOut: () => setState({ animating: !animating }),
+      style: {
+        transform: [
+          `scale(${ pressed ? 0.9 : hovered ? 1.1 : 1 })`,
+          animating && `rotate3d(1,1,0,30deg)`
+        ].filter(valid).join(' ')
+      },
+    }
+  }
+}
+
+function filterVariants(variations, props) {
+  const variationsNames = Object.values(variations).map(Object.keys).flat()
+  const isNotVariation = name => variationsNames.indexOf(name) === -1
+  return Object.assign({}, ...Object.keys(props).filter(isNotVariation).map(prop => ({[prop]:props[prop]})))
+}
+
+const BareComponent = ({ TagType='div', style, ...props }) => {
+  return <TagType
+    style={Object.assign({}, applyAll(variations, props), style)}
+    {...filterVariants(variations, props)}
   />
+}
+
+const Section = ({ hoverIn, hoverOut, pressIn, pressOut, ...props }) => {
+  const handlers = useMouse({hoverIn, hoverOut, pressIn, pressOut})
+  return <BareComponent flex {...handlers} {...props} />
 }
 
 const Square = props => <Section three-width three-height {...props} />
@@ -69,24 +101,14 @@ const Text = props => <Section TagType="p" {...props} />
 const Image = props => <Section TagType="img" {...props} />
 
 const Button = ({...props}) => {
-  const [state, setState] = useState({})
-  const {pressed, hovered, animating} = state;
+  const reaction = useReaction()
   return <Square
-    lightest-filled-shadow={!pressed}
-    lightest-link-shadow={pressed}
+    lightest-filled-shadow={!reaction.state.pressed}
+    lightest-link-shadow={reaction.state.pressed}
     lightest-round
     lightest-margin
+    {...reaction.props}
     {...props}
-    pressIn={() => setState({ animating, pressed: true })}
-    pressOut={() => setState({ animating: !animating, hovered })}
-    hoverIn={() => setState({ animating: !animating, hovered: true })}
-    hoverOut={() => setState({ animating: !animating })}
-    style={{
-      transform: [
-        `scale(${ pressed ? 0.9 : hovered ? 1.1 : 1 })`,
-        animating && `rotate3d(1,1,0,30deg)`
-      ].filter(valid).join(' ')
-    }}
   />
 }
 
@@ -105,12 +127,20 @@ export default () => {
     <Section wrap horizontal justify-center vertical-flow>
       {
         Object.keys(values.pallete).map((pallete, index) => (
-          <Section>
+          <Section key={String.fromCharCode(65+index)}>
             {
               Object.keys(samples).slice(
                 Object.keys(values.pallete).length*index,
                 (index+1)*Object.keys(values.pallete).length
-              ).map(sample => <Button double-grow lightest-link-border-bottom lightest-alert-border-left key={sample} {...{[sample]: true}} />)
+              ).map(sample => (
+                <Button
+                  key={sample}
+                  double-grow
+                  lightest-link-border-bottom
+                  lightest-alert-border-left
+                  {...{[sample]: true}}
+                />
+              ))
             }
           </Section>
         ))
