@@ -51,6 +51,16 @@ Seu Job|- https://github.com/rafaelnco/seujob-entrega/blob/master/src/Appearance
 
   Text.Heading = <Text primary-foreground large-text />
 
+  <Section lightest-filled-shadow justify-start>
+
+  <Section five-height>
+
+  <Image src={logo} full-height/>
+
+  <Text primary-foreground heavy-text>
+
+  <Section wrap horizontal justify-center vertical-flow>
+
   ...
 ```
 ## Getting started
