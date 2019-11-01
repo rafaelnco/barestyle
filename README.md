@@ -46,6 +46,12 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
     full-height
     half-width
 
+    flex
+    block
+
+    double-grow
+    single-flex
+
     ...
   />
 ```
@@ -304,6 +310,8 @@ export { applyVariations, unit, applyTheme, availableThemes };
 
 ### 3. In your component implementation
 
+Simple way:
+
 ```jsx
 import { applyVariations } from "~/Appearance";
 
@@ -319,6 +327,25 @@ const BareComponent = ({ style, ...props }) => {
     />
   );
 };
+```
+
+Right way: (check defaults.js)
+
+```jsx
+import { applyVariations } from "~/Appearance";
+
+function filterVariants(variations, props) {
+  const variationsNames = Object.values(variations).map(Object.keys).flat()
+  const isNotVariation = name => variationsNames.indexOf(name) === -1
+  return Object.assign({}, ...Object.keys(props).filter(isNotVariation).map(prop => ({[prop]:props[prop]})))
+}
+
+const BareComponent = ({ TagType='div', style, ...props }) => {
+  return <TagType
+    style={Object.assign({}, applyAll(variations, props), style)}
+    {...filterVariants(variations, props)}
+  />
+}
 ```
 
 Bare Style can be easily integrated with Styled System  and Styled Components:
@@ -360,22 +387,18 @@ import React, { useState } from "react";
 
 import { applyVariations } from "./Appearance";
 
-const BareComponent = ({
-  TagType = "div",
-  style,
-  ...props
-}) => {
-  return (
-    <TagType
-      {...handlers}
-      {...props}
-      style={Object.assign(
-        applyVariations(props),
-        style
-      )}
-    />
-  );
-};
+function filterVariants(variations, props) {
+  const variationsNames = Object.values(variations).map(Object.keys).flat()
+  const isNotVariation = name => variationsNames.indexOf(name) === -1
+  return Object.assign({}, ...Object.keys(props).filter(isNotVariation).map(prop => ({[prop]:props[prop]})))
+}
+
+const BareComponent = ({ TagType='div', style, ...props }) => {
+  return <TagType
+    style={Object.assign({}, applyAll(variations, props), style)}
+    {...filterVariants(variations, props)}
+  />
+}
 
 /* Theme propagation easily solvable using Composition */
 const Text = props => <BareComponent
@@ -418,6 +441,12 @@ export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 
 Version|Description|Breaking Change
 -|---|---
+1.2.8|Add display variants|
+1.2.7||
+1.2.6||
+1.2.5||
+1.2.4||
+1.2.3||
 1.2.2||
 1.2.1|Add base types, Add default flex variants|Derived types require base type declaration
 1.2.0|Add default dimension variants|
