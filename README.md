@@ -12,6 +12,10 @@ Online demo: https://rafaelnco.github.io/barestyle/
 
 Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src/App.js
 
+Projects using Barestyle:
+
+- SeuJob: https://github.com/rafaelnco/seujob-entrega
+
 ## Introduction
 [Back](#summary)
 
