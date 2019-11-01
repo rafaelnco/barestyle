@@ -436,33 +436,34 @@ export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 
 > Empty rows were either documentation/example updating
 
-Version|Description|Breaking Change
--|---|---
-1.2.8|Add display variants|
-1.2.7||
-1.2.6||
-1.2.5||
-1.2.4||
-1.2.3||
-1.2.2||
-1.2.1|Add base types, Add default flex variants|Derived types require base type declaration
-1.2.0|Add default dimension variants|
-1.1.9||
-1.1.8|Add default percentile variants|
-1.1.7|Add default scaling variants|
-1.1.6||
-1.1.5||
-1.1.4||
-1.1.3||
-1.1.2||
-1.1.1||
-1.1.0||
-1.0.9||
-1.0.7||
-1.0.6||
-1.0.5|Add platform aware default transformations|
-1.0.4||
-1.0.3|Add text alignment default variations|
-1.0.2||
-1.0.1||
-1.0.0|First version|
+Version|Documentation|Description|Breaking Change
+-|---|---|---
+1.2.8|Updates readme|Add default display variants|
+1.2.7||Draft flex rules|
+1.2.6||Update default base types typo|
+1.2.5|Update example||
+1.2.4|Update readme||
+1.2.3|Update readme||
+1.2.2|Draft code documentation||
+1.2.1||Add default flex variants<br>Add base types|Derived types require base type declaration
+1.2.0||Add default dimension variants|
+1.1.9|Update example||
+1.1.8||Add default percentile variants|
+1.1.7||Add default scaling variants|
+1.1.6|Update readme||
+1.1.5|Update readme||
+1.1.4|Update readme||
+1.1.3|Update readme||
+1.1.2|Update example||
+1.1.1|Update readme||
+1.1.0|Link to demo||
+1.0.9|Add Example||
+1.0.8||Add missing default prop|
+1.0.7|NPM Link||
+1.0.6|||
+1.0.5|||Add platform aware default transformations|
+1.0.4|NPM Links||
+1.0.3||Add text alignment default variations|
+1.0.2||Add border decoration default variations|
+1.0.1|Add Readme||
+1.0.0||First version|
