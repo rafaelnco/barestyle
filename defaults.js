@@ -69,6 +69,10 @@ defaults.values = {
   overflow: { flow: "auto" },
   decoration: { no: "none" },
   pointer: { pointer: "pointer" },
+  display: {
+    flex: "flex",
+    block: "block"
+  },
   orientation: {
     horizontal: "row",
     vertical: "column"
@@ -183,6 +187,7 @@ defaults.values = {
 */
 defaults.rules = {
   wrap: { "": ["flexWrap"] },
+  display: { "": ["display"] },
   vectors: { fill: ["fill"] },
   cursor: { cursor: ["cursor"] },
   borders: { border: ["border"] },
@@ -379,6 +384,7 @@ defaults.variants = ({ rules, values }) => ({
   wrap: [values.wrap, rules.wrap],
   text: [values.text, rules.typography],
   layout: [rules.layout, values.layout],
+  display: [values.display, rules.display],
   pointer: [values.pointer, rules.cursor],
   vectors: [values.pallete, rules.vectors],
   percentile: [values.percentiles, rules.scaling],
