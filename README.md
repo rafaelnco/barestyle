@@ -434,8 +434,6 @@ export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 ## Changelog
 [Back](#summary)
 
-> Empty rows were either documentation/example updating
-
 Version|Documentation|Description|Breaking Change
 -|---|---|---
 1.2.8|Updates readme|Add default display variants|
