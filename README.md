@@ -14,7 +14,9 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
 
 Projects using Barestyle:
 
-- SeuJob: https://github.com/rafaelnco/seujob-entrega
+Project|Links
+-|--
+Seu Job|- https://github.com/rafaelnco/seujob-entrega/blob/master/src/Appearance.js<br>- https://github.com/rafaelnco/seujob-entrega/blob/master/src/Components.js
 
 ## Introduction
 [Back](#summary)
