@@ -27,7 +27,9 @@ Demo Source code: https://github.com/rafaelnco/barestyle/blob/master/example/src
   // enable or disable variants with a simple boolean
   const focused = true
 
-  Button.Primary = props => <Button primary-background {...props} />
+  Button.Primary = props => (
+    <Button primary-background {...props} />
+  )
 
   <Button.Primary
     linkForeground={focused}
