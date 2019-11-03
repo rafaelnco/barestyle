@@ -8,29 +8,10 @@ import {
   defaults,
   generator,
   generate,
-  applyAll,
+  applyVariants,
 } from 'barestyle'
 
-import { valid, 
-  paramCase,
-  camelCase} from 'barestyle/utils'
-
-const { values, rules } = defaults
-
-const unit = unit => `${2 * unit}rem`
-
-const variations = generator({
-  nominators: [paramCase, camelCase],
-  types: {
-    //spacing: spacing => ({ spacing: 5 * spacing }),
-    unit,
-  },
-  /* transformers: props => [
-    ...defaults.transformers(props),
-  ] */
-})
-
-console.log(variations)
+import { valid, paramCase, camelCase} from 'barestyle/utils'
 
 function useMouse({hoverIn, hoverOut, pressIn, pressOut}) {
   const [pressed, setPressed] = useState(false)
@@ -76,29 +57,33 @@ function useReaction() {
   }
 }
 
-function filterVariants(variations, props) {
-  const variationsNames = Object.values(variations).map(Object.keys).flat()
-  const isNotVariation = name => variationsNames.indexOf(name) === -1
-  return Object.assign({}, ...Object.keys(props).filter(isNotVariation).map(prop => ({[prop]:props[prop]})))
-}
+const { values, rules } = defaults
 
-const BareComponent = ({ TagType='div', style, ...props }) => {
-  return <TagType
-    style={Object.assign({}, applyAll(variations, props), style)}
-    {...filterVariants(variations, props)}
-  />
+const unit = unit => `${2 * unit}rem`
+
+const variations = generator({
+  nominators: [paramCase, camelCase],
+  types: { unit }
+})
+
+console.log(variations)
+
+const assembled = Object.assign({}, ...Object.values(variations))
+
+const Bare = ({ Tag = 'div', hoverIn, hoverOut, pressIn, pressOut, ...props }) => {
+  const handlers = useMouse({hoverIn, hoverOut, pressIn, pressOut})
+  return <Tag {...handlers} {...applyVariants(assembled, props)} />
 }
 
 const Section = ({ hoverIn, hoverOut, pressIn, pressOut, ...props }) => {
-  const handlers = useMouse({hoverIn, hoverOut, pressIn, pressOut})
-  return <BareComponent flex {...handlers} {...props} />
+  return <Bare flex {...props} />
 }
 
-const Square = props => <Section three-width three-height {...props} />
+const Square = props => <Bare three-width three-height {...props} />
 
-const Text = props => <Section TagType="p" {...props} />
+const Text = props => <Bare Tag="p" {...props} />
 
-const Image = props => <Section TagType="img" {...props} />
+const Image = props => <Bare Tag="img" {...props} />
 
 const Button = ({...props}) => {
   const reaction = useReaction()
@@ -112,8 +97,10 @@ const Button = ({...props}) => {
   />
 }
 
-const constraints = [ values.dimension, values.pallete, rules.background ]
+const background = { background: ["backgroundColor"] }
+const constraints = [ values.dimension, values.pallete, background ]
 const samples = generate({constraints})
+
 export default () => {
   return <Section vertical>
     <Section lightest-filled-shadow justify-start>
@@ -124,7 +111,7 @@ export default () => {
         <Text primary-foreground heavy-text>Bare Style</Text>
       </Section>
     </Section>
-    <Section wrap horizontal justify-center vertical-flow>
+    <Section wrap horizontal justify-center flow-vertical>
       {
         Object.keys(values.pallete).map((pallete, index) => (
           <Section key={String.fromCharCode(65+index)}>
