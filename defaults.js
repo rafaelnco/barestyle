@@ -326,7 +326,7 @@ defaults.transformers = ({ unit }) => {
     },
     {
       parameters: ["percentile", "color"],
-      transformation: ({ percentile, color }) => `${color.substr(0,7)}${toHex(percentile*255)}`
+      transformation: ({ percentile, color }) => `${color.substr(0,7)}${toHex(Math.round(percentile*255))}`
     },
     {
       parameters: ["scale", "color"],
