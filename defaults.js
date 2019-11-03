@@ -66,14 +66,23 @@ const { color, scale, percentile } = defaults.types;
 defaults.values = {
   wrap: { wrap: "wrap" },
   text: { italic: "italic" },
-  overflow: { flow: "auto" },
   decoration: { no: "none" },
   pointer: { pointer: "pointer" },
+  events: { all: "all", no: "none" },
+  overflow: { "": "auto", no: "hidden" },
   display: {
     flex: "flex",
-    block: "block"
+    block: "block",
+    cell: "table-cell"
   },
-  orientation: {
+  position: {
+    absolute: "absolute",
+    relative: "relative",
+    static: "static",
+    fixed: "fixed",
+    sticky: "sticky"
+  },
+  direction: {
     horizontal: "row",
     vertical: "column"
   },
@@ -188,24 +197,19 @@ defaults.values = {
 defaults.rules = {
   wrap: { "": ["flexWrap"] },
   display: { "": ["display"] },
+  position: { "": ["position"] },
+  direction: { "": ["flexDirection"] },
   vectors: { fill: ["fill"] },
   cursor: { cursor: ["cursor"] },
   borders: { border: ["border"] },
+  overflow: { flow: ["overflow"] },
   textAlign: { text: ["textAlign"] },
-  shadow: { shadow: ["boxShadow"] },
   corners: { round: ["borderRadius"] },
-  orientation: { "": ["flexDirection"] },
+  events: { events: ["pointerEvents"] },
   decoration: { decoration: ["textDecoration"] },
-  background: { background: ["backgroundColor"] },
-  scaling: {
-    width: ["width"],
-    height: ["height"],
-    ratio: ["aspectRatio"]
-  },
-  typography: {
-    text: ["fontSize"],
-    font: ["fontStyle"],
-    weight: ["fontWeight"]
+  shadow: {
+    shadow: ["boxShadow"],
+    textShadow: ["textShadow"]
   },
   layout: {
     align: ["alignItems"],
@@ -215,31 +219,50 @@ defaults.rules = {
     foreground: ["color"],
     background: ["backgroundColor"]
   },
+  typography: {
+    text: ["fontSize"],
+    font: ["fontStyle"],
+    weight: ["fontWeight"]
+  },
   spacing: {
     margin: ["margin"],
-    padding: ["padding"]
+    padding: ["padding"],
+    spacing: ["margin", "padding"]
   },
-  overflow: {
-    "": ["overflow"],
-    vertical: ["overflowY"],
-    horizontal: ["overflowX"]
+  scaling: {
+    width: ["width"],
+    height: ["height"],
+    area: ["width", "height"],
+    ratio: ["aspectRatio"]
+  },
+  flowSides: {
+    vertical: ["Y"],
+    horizontal: ["X"]
   },
   flex: {
-    "": ["flex"],
+    "": ["flex"], /* to be deprecated: 10/10/19 */
     flex: ["flex"],
     grow: ["flexGrow"],
-    shrink: ["flexShrink"],
-    basis: ["flexBasis"]
+    basis: ["flexBasis"],
+    shrink: ["flexShrink"]
   },
   sides: {
-    "": [""],
     top: ["Top"],
     left: ["Left"],
     right: ["Right"],
     bottom: ["Bottom"],
     vertical: ["Top", "Bottom"],
     horizontal: ["Left", "Right"]
-  }
+  },
+  positioning: {
+    top: ["top"],
+    left: ["left"],
+    right: ["right"],
+    bottom: ["bottom"],
+    vertical: ["top","bottom"],
+    horizontal: ["left","right"],
+    inset: ["top","bottom","left","right"]
+  },
 };
 
 /*
@@ -282,6 +305,37 @@ defaults.transformers = ({ unit }) => {
   const { native, web } = identify()
   return [
     {
+      parameters: ["flex"],
+      transformation: ({ flex }) => flex
+    },
+    {
+      parameters: ["font"],
+      transformation: ({ font }) => unit(font)
+    },
+    {
+      parameters: ["scale"],
+      transformation: ({ scale }) => unit(scale)
+    },
+    {
+      parameters: ["spacing"],
+      transformation: ({ spacing }) => unit(spacing)
+    },
+    {
+      parameters: ["percentile"],
+      transformation: ({percentile}) => `${percentile * 100}%`
+    },
+    {
+      parameters: ["percentile", "color"],
+      transformation: ({ percentile, color }) => `${color.substr(0,7)}${toHex(percentile*255)}`
+    },
+    {
+      parameters: ["scale", "color"],
+      transformation: ({ scale, color }) => {
+        const calculate = value => Math.min(255, Math.round((1 / scale) * value));
+        return `#${parseHex(color).map(calculate).map(toHex).join("")}`;
+      }
+    },
+    {
       parameters: ["border"],
       transformation: ({ border, color }, { name }) => Object.assign({
         [name+'Width']: unit(border),
@@ -318,36 +372,6 @@ defaults.transformers = ({ unit }) => {
           shadowColor: color,
           elevation: unit(shadow)
         })
-    },
-    {
-      parameters: ["scale"],
-      transformation: ({ scale }) => unit(scale)
-    },
-    {
-      parameters: ["flex"],
-      transformation: ({ flex }) => flex
-    },
-    {
-      parameters: ["font"],
-      transformation: ({ font }) => unit(font)
-    },
-    {
-      parameters: ["spacing"],
-      transformation: ({ spacing }) => unit(spacing)
-    },
-    {
-      parameters: ["percentile"],
-      transformation: ({percentile}) => `${percentile * 100}%`
-    },
-    {
-      parameters: ["scale", "color"],
-      transformation: ({ scale, color }) => {
-        const intColors = parseHex(color);
-        const factor = 1 / scale;
-        const calculate = value => Math.min(255, Math.round(factor * value));
-        const calculated = intColors.map(calculate);
-        return `#${calculated.map(toHex).join("")}`;
-      }
     }
   ]
 };
@@ -384,23 +408,28 @@ defaults.variants = ({ rules, values }) => ({
   wrap: [values.wrap, rules.wrap],
   text: [values.text, rules.typography],
   layout: [rules.layout, values.layout],
-  display: [values.display, rules.display],
+  events: [values.events, rules.events],
   pointer: [values.pointer, rules.cursor],
+  display: [values.display, rules.display],
   vectors: [values.pallete, rules.vectors],
-  percentile: [values.percentiles, rules.scaling],
   scaling: [values.scaling, rules.scaling],
-  dimension: [values.dimension, rules.scaling],
-  overflow: [rules.overflow, values.overflow],
+  position: [values.position, rules.position],
   typography: [values.font, rules.typography],
+  dimension: [values.dimension, rules.scaling],
+  direction: [values.direction, rules.direction],
   textAlign: [values.textAlign, rules.textAlign],
-  borderDecoration: [values.decoration, rules.borders],
+  percentile: [values.percentiles, rules.scaling],
   decoration: [values.decoration, rules.decoration],
-  orientation: [values.orientation, rules.orientation],
-  spacing: [values.spacing, rules.spacing, rules.sides],
-  corners: [values.dimension, rules.corners, rules.sides],
+  positioning: [values.percentiles, rules.positioning],
+  borderDecoration: [values.decoration, rules.borders],
+  themesAlpha: [values.percentiles, values.pallete, rules.theme],
   shadow: [values.shadow, optional(values.pallete), rules.shadow],
+  spacing: [values.spacing, rules.spacing, optional(rules.sides)],
   themes: [optional(values.dimension), values.pallete, rules.theme],
-  borders: [values.border, optional(values.pallete), rules.borders, rules.sides]
+  corners: [values.dimension, rules.corners, optional(rules.sides)],
+  overflow: [values.overflow, rules.overflow, optional(rules.flowSides)],
+  spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
+  borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)]
 });
 
 export default defaults;
