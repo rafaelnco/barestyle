@@ -446,6 +446,7 @@ export { BareComponent, Text, Link, Path, Input, Image, Navigator };
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.3.0|Update readme||
 1.2.9|Updates example to use `applyVariants`|- Adds variants: all/none pointer events, none overflow, display table-cell, position absolute/relative..., textShadow, spacing (margin + padding), scaling area (width + height), positioning (top, left, bottom, inset...)<br><br>- Adds alpha color transformation<br><br>- Adds `applyVariants` to barestyle exports|Overflow variants are inverted (_vertical-flow_ turns into _flow-vertical_, _no-flow-vertical_...)
 1.2.8|Updates readme|Add default display variants|
 1.2.7||Draft flex rules|
