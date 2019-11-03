@@ -76,7 +76,10 @@ const generator = (proprietary = {}) => {
   const rules = Object.assign({}, defaults.rules, proprietary.rules);
   const types = Object.assign({}, defaults.types, proprietary.types);
   const values = Object.assign({}, defaults.values, proprietary.values);
-  const derivate = type => !types[type].base && types[type] || ({ [type]: convert(values[types[type].base], types[type]) });
+  const derivate = type => {
+    if (!types[type].base) return types[type]
+    return { [type]: convert(values[types[type].base], types[type]) }
+  }
   Object.assign(values, ...Object.keys(types).map(derivate));
   const variantGenerator = proprietary.variants || defaults.variants;
   const variants = variantGenerator({ rules, values });
@@ -89,18 +92,22 @@ const generator = (proprietary = {}) => {
 };
 
 const applyVariants = (variants, props) => {
-  const isEnabled = prop => !!props[prop] && variants[prop];
-  const enabled = Object.keys(props).filter(isEnabled);
-  const apply = variant =>
-    isFunction(variants[variant])
-      ? variants[variant](props[variant])
-      : variants[variant];
-  return Object.assign({}, ...enabled.map(apply));
+  const style = {};
+  const properties = { ...props };
+  const apply = prop => {
+    if (variants[prop]) {
+      if (props[prop]) Object.assign(style, variants[prop]);
+      delete properties[prop];
+    }
+  };
+  Object.keys(props).forEach(apply);
+  Object.assign(style, props.style);
+  return { ...properties, style };
 };
 
 const applyAll = (variants, props) => {
-  const apply = variation => applyVariants(variants[variation], props);
+  const apply = variation => applyVariants(variants[variation], props).style;
   return Object.assign({}, ...Object.keys(variants).map(apply));
 };
 
-export { defaults, generator, generate, applyAll, optional };
+export { defaults, generator, generate, applyVariants, applyAll, optional };
