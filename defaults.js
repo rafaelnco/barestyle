@@ -65,6 +65,7 @@ const { color, scale, percentile } = defaults.types;
 */
 defaults.values = {
   wrap: { wrap: "wrap" },
+  drop: { drop: undefined },
   text: { italic: "italic" },
   decoration: { no: "none" },
   pointer: { pointer: "pointer" },
@@ -204,7 +205,10 @@ defaults.rules = {
   borders: { border: ["border"] },
   overflow: { flow: ["overflow"] },
   textAlign: { text: ["textAlign"] },
-  corners: { round: ["borderRadius"] },
+  corners: {
+    round: ["borderRadius"], /* to be deprecated: 10/10/19 */
+    radius: ["borderRadius"] 
+  },
   events: { events: ["pointerEvents"] },
   decoration: { decoration: ["textDecoration"] },
   shadow: {
@@ -413,6 +417,7 @@ defaults.variants = ({ rules, values }) => ({
   display: [values.display, rules.display],
   vectors: [values.pallete, rules.vectors],
   scaling: [values.scaling, rules.scaling],
+  dropScaling: [values.drop, rules.scaling],
   position: [values.position, rules.position],
   typography: [values.font, rules.typography],
   dimension: [values.dimension, rules.scaling],
