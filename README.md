@@ -478,6 +478,7 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.3.6|Add transition  values, transformation|
 1.3.5||Add flex transition value|
 1.3.4||Add transition, transform default variants|
 1.3.3||Add opacity, apex (zIndex) default variants|
