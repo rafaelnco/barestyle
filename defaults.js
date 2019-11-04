@@ -24,6 +24,7 @@ defaults.types = {
   /* derived types require a base type declaration */
   font: font => ({ font }),
   flex: flex => ({ flex }),
+  apex: apex => ({ apex }),
   color: color => ({ color }),
   shadow: shadow => ({ shadow }),
   border: border => ({ border }),
@@ -37,6 +38,7 @@ defaults.types = {
   `dimension: { lightest: scale(0.2), light: scale(0.5), ...`
   lightest-padding, light-border, normal-margin ...
 */
+defaults.types.apex.base = 'scaling'
 defaults.types.flex.base = 'percentiles'
 defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
@@ -200,10 +202,12 @@ defaults.rules = {
   display: { "": ["display"] },
   position: { "": ["position"] },
   direction: { "": ["flexDirection"] },
+  apex: { apex: ["zIndex"] },
   vectors: { fill: ["fill"] },
   cursor: { cursor: ["cursor"] },
   borders: { border: ["border"] },
   overflow: { flow: ["overflow"] },
+  opacity: { opacity: ["opacity"] },
   textAlign: { text: ["textAlign"] },
   corners: {
     round: ["borderRadius"], /* to be deprecated: 10/10/19 */
@@ -313,6 +317,10 @@ defaults.transformers = ({ unit }) => {
       transformation: ({ flex }) => flex
     },
     {
+      parameters: ["apex"],
+      transformation: ({ apex }) => apex
+    },
+    {
       parameters: ["font"],
       transformation: ({ font }) => unit(font)
     },
@@ -410,6 +418,7 @@ defaults.transformers = ({ unit }) => {
 defaults.variants = ({ rules, values }) => ({
   flex: [values.flex, rules.flex],
   wrap: [values.wrap, rules.wrap],
+  apex: [values.apex, rules.apex],
   text: [values.text, rules.typography],
   layout: [rules.layout, values.layout],
   events: [values.events, rules.events],
@@ -420,6 +429,7 @@ defaults.variants = ({ rules, values }) => ({
   dropScaling: [values.drop, rules.scaling],
   position: [values.position, rules.position],
   typography: [values.font, rules.typography],
+  opacity: [values.percentiles, rules.opacity],
   dimension: [values.dimension, rules.scaling],
   direction: [values.direction, rules.direction],
   textAlign: [values.textAlign, rules.textAlign],
