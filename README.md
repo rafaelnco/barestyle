@@ -1,11 +1,16 @@
-<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="25%">
-
 # [Bare Style - A declarative variant generator](https://rafaelnco.github.io/barestyle/)
 
 ## Summary
 
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="25%" style="float: right;">
+
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
+  - [Install](#1-install)
+  - [Configure](#2-configure)
+  - [Implementation](#3-implementation)
+  - [Instantiation](#4-instantiation)
+- [Deprecation Schedule](#deprecation-schedule)
 - [Changelog](#changelog)
 
 Projects using Barestyle:
@@ -60,14 +65,19 @@ Seu Job|- https://seujob.github.io/hot<br>- https://github.com/rafaelnco/seujob-
 
   ...
 ```
+
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
+
 ## Getting started
 [Back](#summary)
 
-### 1. In your projects root folder, on your terminal:
+### 1. Install
+[Back](#summary)
 
   - `$ yarn add barestyle`
 
-### 2. In your prefferable code editor:
+### 2. Configure
+[Back](#summary)
 
   - create `Appearance.js` on home folder and choose a way:
 
@@ -321,7 +331,12 @@ applyTheme(availableThemes[0]);
 export { applyVariations, bareStyle, unit, applyTheme, availableThemes };
 ```
 
-### 3. In your component implementation
+
+
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
+
+### 3. Implementation
+[Back](#summary)
 
 Right way: (check defaults.js and example for real case)
 
@@ -382,7 +397,10 @@ export const Text = styled.Text`
 
 ```
 
-### 4. In your component instantiation
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
+
+### 4. Instantiation
+[Back](#summary)
 
 Once you grasp the variant declaration syntax it'll be easy to compose new variant definitions
 
@@ -399,53 +417,68 @@ Once you grasp the variant declaration syntax it'll be easy to compose new varia
 Going beyond, `Components.js`:
 
 ```jsx
-import React, { useState } from "react";
+const { values, rules } = defaults
 
-import { bareStyle } from "./Appearance";
+const unit = unit => `${2 * unit}rem`
 
-const BareComponent = ({ TagType='div', ...props }) => {
-  return <TagType {...bareStyle(props)} />
-}
+const variations = generator({
+  types: { unit }
+})
 
-/* Theme propagation easily solvable using Composition */
-const Text = props => <BareComponent
-  TagType="p"
-  primary-foreground
-  {...props}
-/>;
+const assembled = Object.assign({}, ...Object.values(variations))
+
+const Bare = ({ Tag = 'div', ...props }) => <Tag {...applyVariants(assembled, props)} />
+
+const Section = ({ ...props }) => <Bare flex {...props} />
+
+const Square = props => <Bare three-width three-height {...props} />
+
+const Text = props => <Bare Tag="p" primary-foreground {...props} />;
 
 const Link = props => (
-  <Text
-    TagType="a"
-    no-decoration
-    link-foreground
-    {...props}
-  />
+  <Text Tag="a" no-decoration link-foreground {...props} />
 );
 
 const Image = props => (
-  <BareComponent
-    TagType="img"
-    normal-round
-    normal-shadow
-    {...props}
-  />
+  <Bare Tag="img" normal-round normal-shadow {...props} />
 );
 
-const Path = props => <BareComponent
-  TagType="path"
-  primary-fill
-  {...props}
-/>;
+const Path = props => <Bare Tag="path" primary-fill {...props} />;
 
-export { BareComponent, Text, Link, Path, Input, Image, Navigator };
+const Button = ({...props}) => {
+   /* interaction handlers, see barestyle/example */
+  const reaction = useReaction()
+  return <Square
+    lightest-filled-shadow={!reaction.state.pressed}
+    lightest-link-shadow={reaction.state.pressed}
+    lightest-round
+    lightest-margin
+    {...reaction.props}
+    {...props}
+  />
+}
 ```
+
+
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
+
+## Deprecation Schedule
+[Back](#summary)
+
+Deadline|Version|Feature|Purpose
+--|---|---|---
+10/10/19||`full/...(-flex)` single-worded flex variant|Use `full-flex` explicitly
+10/10/19||`dimension-round` variant|More coherently use `dimension-radius`
+
+
+<img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
 
 ## Changelog
 [Back](#summary)
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.3.2||Add drop width, borderRadius default variants|
 1.3.1||Update alpha color transformation||
 1.3.0|Update readme||
 1.2.9|Updates example to use `applyVariants`|- Adds variants: all/none pointer events, none overflow, display table-cell, position absolute/relative..., textShadow, spacing (margin + padding), scaling area (width + height), positioning (top, left, bottom, inset...)<br><br>- Adds alpha color transformation<br><br>- Adds `applyVariants` to barestyle exports|Overflow variants are inverted (_vertical-flow_ turns into _flow-vertical_, _no-flow-vertical_...)
