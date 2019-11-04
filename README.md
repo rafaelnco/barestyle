@@ -478,14 +478,14 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
-1.3.6|Add transition  values, transformation|
+1.3.6||Add transition  values, transformation|
 1.3.5||Add flex transition value|
 1.3.4||Add transition, transform default variants|
 1.3.3||Add opacity, apex (zIndex) default variants|
 1.3.2||Add drop width, borderRadius default variants|
 1.3.1||Update alpha color transformation||
 1.3.0|Update readme||
-1.2.9|Updates example to use `applyVariants`|- Adds variants: all/none pointer events, none overflow, display table-cell, position absolute/relative..., textShadow, spacing (margin + padding), scaling area (width + height), positioning (top, left, bottom, inset...)<br><br>- Adds alpha color transformation<br><br>- Adds `applyVariants` to barestyle exports|Overflow variants are inverted (_vertical-flow_ turns into _flow-vertical_, _no-flow-vertical_...)
+1.2.9|Updates example to use `applyVariants`|- Adds variants:<br> all/none pointer events,<br> none overflow,<br> display table-cell,<br> position absolute/relative...,<br> textShadow,<br> spacing (margin + padding),<br> scaling area (width + height),<br> positioning (top, left, bottom, inset...)<br><br>- Adds alpha color transformation<br><br>- Adds `applyVariants` to barestyle exports|Overflow variants are inverted (_vertical-flow_ turns into _flow-vertical_, _no-flow-vertical_...)
 1.2.8|Updates readme|Add default display variants|
 1.2.7||Draft flex rules|
 1.2.6||Update default base types typo|
