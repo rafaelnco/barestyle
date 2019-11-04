@@ -478,6 +478,7 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.3.3||Add opacity, apex (zIndex) default variants||
 1.3.2||Add drop width, borderRadius default variants|
 1.3.1||Update alpha color transformation||
 1.3.0|Update readme||
