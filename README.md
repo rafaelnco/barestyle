@@ -55,9 +55,9 @@ Seu Job|- https://seujob.github.io/hot<br>- https://github.com/rafaelnco/seujob-
 
   <Section lightest-filled-shadow justify-start>
 
-  <Section five-height no-flow-horizontal flow-vertical>
+  <Section five-height no-flow-horizontal flow-vertical quarter-skew >
 
-  <Image src={logo} full-height absolute/>
+  <Image src={logo} full-height absolute tenth-rotate />
 
   <Text primary-foreground heavy-text block light-textShadow>
 
@@ -478,7 +478,8 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
-1.3.3||Add opacity, apex (zIndex) default variants||
+1.3.4||Add transition, transform default variants|
+1.3.3||Add opacity, apex (zIndex) default variants|
 1.3.2||Add drop width, borderRadius default variants|
 1.3.1||Update alpha color transformation||
 1.3.0|Update readme||
