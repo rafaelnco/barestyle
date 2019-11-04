@@ -15,10 +15,15 @@ defaults.types = {
 
   /* root types used in final transformations */
   unit: value => `${value}rem`,
+  time: value => `${value * 150}ms`,
+  percent: value => `${value * 100}%`,
+  degree: value => `${value * 360}deg`,
 
   /* values declarations too are used as types */
   scale: scale => ({ scale }),
   string: string => ({ string }),
+  transform: transform => ({ transform }),
+  transition: transition => ({ transition }),
   percentile: percentile => ({ percentile }),
 
   /* derived types require a base type declaration */
@@ -28,6 +33,8 @@ defaults.types = {
   color: color => ({ color }),
   shadow: shadow => ({ shadow }),
   border: border => ({ border }),
+  timing: timing => ({ timing }),
+  degrees: degrees => ({ degrees }),
   spacing: spacing => ({ spacing }),
 
 };
@@ -44,10 +51,12 @@ defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
 defaults.types.shadow.base = 'dimension'
 defaults.types.border.base = 'dimension'
+defaults.types.timing.base = 'dimension'
 defaults.types.spacing.base = 'dimension'
+defaults.types.degrees.base = 'percentiles'
 
 /* always use types to define values constraints */
-const { color, scale, percentile } = defaults.types;
+const { color, scale, percentile, transform, transition } = defaults.types;
 
 /*
   Values constraints names are used to generate variant names
@@ -78,6 +87,13 @@ defaults.values = {
     block: "block",
     cell: "table-cell"
   },
+  transformPercentile: {
+    translate: transform("translate"),
+  },
+  transformDegree: {
+    rotate: transform("rotate"),
+    skew: transform("skew"),
+  },
   position: {
     absolute: "absolute",
     relative: "relative",
@@ -100,6 +116,15 @@ defaults.values = {
     start: "flex-start",
     center: "center",
     end: "flex-end"
+  },
+  transition: {
+    all: transition("all"),
+    color: transition("color"),
+    background: transition("backgroundColor"),
+    width: transition("width"),
+    height: transition("height"),
+    opacity: transition("opacity"),
+    transform: transition("transform"),
   },
   dimension: {
     lightest: scale(0.2),
@@ -201,6 +226,7 @@ defaults.rules = {
   wrap: { "": ["flexWrap"] },
   display: { "": ["display"] },
   position: { "": ["position"] },
+  transform: { "": ["transform"] },
   direction: { "": ["flexDirection"] },
   apex: { apex: ["zIndex"] },
   vectors: { fill: ["fill"] },
@@ -209,12 +235,13 @@ defaults.rules = {
   overflow: { flow: ["overflow"] },
   opacity: { opacity: ["opacity"] },
   textAlign: { text: ["textAlign"] },
+  events: { events: ["pointerEvents"] },
+  transition: { transition: ["transition"] },
+  decoration: { decoration: ["textDecoration"] },
   corners: {
     round: ["borderRadius"], /* to be deprecated: 10/10/19 */
     radius: ["borderRadius"] 
   },
-  events: { events: ["pointerEvents"] },
-  decoration: { decoration: ["textDecoration"] },
   shadow: {
     shadow: ["boxShadow"],
     textShadow: ["textShadow"]
@@ -309,7 +336,7 @@ defaults.rules = {
     },`
   ```
 */
-defaults.transformers = ({ unit }) => {
+defaults.transformers = ({ unit, degree, percent, time }) => {
   const { native, web } = identify()
   return [
     {
@@ -334,11 +361,23 @@ defaults.transformers = ({ unit }) => {
     },
     {
       parameters: ["percentile"],
-      transformation: ({percentile}) => `${percentile * 100}%`
+      transformation: ({percentile}) => percent(percentile)
     },
     {
       parameters: ["percentile", "color"],
       transformation: ({ percentile, color }) => `${color.substr(0,7)}${toHex(Math.round(percentile*255))}`
+    },
+    {
+      parameters: ["percentile", "transform"],
+      transformation: ({ transform, percentile }) => `${transform}(${percent(percentile)})`
+    },
+    {
+      parameters: ["timing", "transition"],
+      transformation: ({ timing, transition }) => `${transition} ${time(timing)}`
+    },
+    {
+      parameters: ["degrees", "transform"],
+      transformation: ({ transform, degrees}) => `${transform}(${degree(degrees)})`
     },
     {
       parameters: ["scale", "color"],
@@ -349,7 +388,7 @@ defaults.transformers = ({ unit }) => {
     },
     {
       parameters: ["border"],
-      transformation: ({ border, color }, { name }) => Object.assign({
+      transformation: ({ border }, { name }) => Object.assign({
         [name+'Width']: unit(border),
         [name+'Color']: '#333'
       }, web && {
@@ -443,6 +482,9 @@ defaults.variants = ({ rules, values }) => ({
   themes: [optional(values.dimension), values.pallete, rules.theme],
   corners: [values.dimension, rules.corners, optional(rules.sides)],
   overflow: [values.overflow, rules.overflow, optional(rules.flowSides)],
+  transition: [values.timing, values.transition, rules.transition],
+  transformDegree: [values.degrees, values.transformDegree, rules.transform],
+  transformPercentile: [values.percentiles, values.transformPercentile, rules.transform],
   spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
   borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)]
 });
