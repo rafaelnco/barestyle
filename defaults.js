@@ -120,6 +120,7 @@ defaults.values = {
   transition: {
     all: transition("all"),
     color: transition("color"),
+    flex: transition("flex"),
     background: transition("backgroundColor"),
     width: transition("width"),
     height: transition("height"),
