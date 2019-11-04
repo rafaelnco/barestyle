@@ -119,13 +119,14 @@ defaults.values = {
   },
   transition: {
     all: transition("all"),
-    color: transition("color"),
     flex: transition("flex"),
-    background: transition("backgroundColor"),
     width: transition("width"),
     height: transition("height"),
     opacity: transition("opacity"),
     transform: transition("transform"),
+    foreground: transition("color"),
+    background: transition("background-color"),
+    theme: transition(["color","background-color"]),
   },
   dimension: {
     lightest: scale(0.2),
@@ -374,7 +375,11 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
     },
     {
       parameters: ["timing", "transition"],
-      transformation: ({ timing, transition }) => `${transition} ${time(timing)}`
+      transformation: ({ timing, transition }) =>
+        (Array.isArray(transition)
+          ? transition
+          : [transition]
+        ).map(name => `${name} ${time(timing)}`).join(', ')
     },
     {
       parameters: ["degrees", "transform"],
