@@ -382,11 +382,12 @@ export { bareStyle, unit };
 In your component implementation, add if after styled-system:
 ```jsx
 import styled from 'styled-components/native';
+
 import { typography, color, space, layout } from 'styled-system';
 
 import { bareStyle } from '~/Appearance';
 
-/* using applyVariations as styled system property */
+/* using applyVariations with styled componentes and styled system */
 export const Text = styled.Text`
   ${color}
   ${typography}
