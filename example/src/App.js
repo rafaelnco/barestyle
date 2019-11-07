@@ -4,16 +4,48 @@ import logo from './logo.svg'
 
 import './App.css';
 
-import {
-  defaults,
-  generator,
-  generate,
-  applyVariants,
-} from 'barestyle'
+import { defaults, generator, generate, applyVariants, assemble } from 'barestyle'
 
-import { valid, paramCase, camelCase} from 'barestyle/utils'
+import { paramCase, camelCase } from 'barestyle/utils'
 
-function useMouse({hoverIn, hoverOut, pressIn, pressOut}) {
+const { values } = defaults
+
+const variations = generator({
+  nominators: [ paramCase, camelCase ],
+  types: { unit: unit => `${ 2 * unit }rem` }
+})
+
+const $ = $ => $
+
+const animate = ({ pressed, hovered, animating }) => (<$
+  oneHalf-scale={pressed}
+  twoAHalf-skew={animating}
+  two-scale={hovered}
+  one-apex={hovered||pressed}
+  lightest-filled-shadow={!pressed}
+  lightest-link-shadow={pressed}
+/>).props
+
+function useAnimate() {
+  const { state, props } = useReaction()
+  return Object.assign({}, animate(state), props)
+}
+
+function useReaction(props, value) {
+  const [state, setState] = useState({})
+  const {pressed, hovered, animating} = state;
+  return {
+    state,
+    props: {
+      pressIn: () => setState({ animating, pressed: true }),
+      pressOut: () => setState({ animating: !animating, hovered }),
+      hoverIn: () => setState({ animating: !animating, hovered: true }),
+      hoverOut: () => setState({ animating: !animating }),
+    },
+  }
+}
+
+function useMouse({ hoverIn, hoverOut, pressIn, pressOut }) {
   const [pressed, setPressed] = useState(false)
   return {
     onMouseEnter: () => {
@@ -28,78 +60,68 @@ function useMouse({hoverIn, hoverOut, pressIn, pressOut}) {
       setPressed(false)
     },
     onMouseLeave: () => {
-      if(pressed) {
-        //if(pressOut) pressOut()
-        setPressed(false)
-      }
+      if(pressed) setPressed(false)
       if(hoverOut) hoverOut()
     },
   }
 }
 
-function useReaction() {
-  const [state, setState] = useState({})
-  const {pressed, hovered, animating} = state;
-  return {
-    state,
-    props: {
-      pressIn: () => setState({ animating, pressed: true }),
-      pressOut: () => setState({ animating: !animating, hovered }),
-      hoverIn: () => setState({ animating: !animating, hovered: true }),
-      hoverOut: () => setState({ animating: !animating }),
-      style: {
-        transform: [
-          `scale(${ pressed ? 0.9 : hovered ? 1.1 : 1 })`,
-          animating && `rotate3d(1,1,0,30deg)`
-        ].filter(valid).join(' ')
-      },
+useMouse.consumer = [ 'hoverIn', 'hoverOut', 'pressIn', 'pressOut' ]
+
+const hook = hook => ({ hook })
+
+const hooks = generator({
+  types: { hook },
+  values: {
+    hooks: {
+      mouse: hook(useMouse),
+      animate: hook(useAnimate)
     }
-  }
-}
-
-const { values, rules } = defaults
-
-const unit = unit => `${2 * unit}rem`
-
-const variations = generator({
-  nominators: [paramCase, camelCase],
-  types: { unit }
+  },
+  rules: {
+    hooks: { use: ["action"] }
+  },
+  variants: ({ rules, values }) => ({
+    hooks: [rules.hooks, values.hooks]
+  }),
+  transformers: ({ }) => [
+    {
+      type: 'properties',
+      parameters: ["hook"],
+      transformation: ({ hook }) => ({ hook })
+    }
+  ]
 })
 
-console.log(variations)
+console.log(hooks, variations)
 
-const assembled = Object.assign({}, ...Object.values(variations))
+const assembled = assemble(variations, hooks)
 
-const Bare = ({ Tag = 'div', hoverIn, hoverOut, pressIn, pressOut, ...props }) => {
-  const handlers = useMouse({hoverIn, hoverOut, pressIn, pressOut})
-  return <Tag {...handlers} {...applyVariants(assembled, props)} />
-}
-
-const Section = ({ hoverIn, hoverOut, pressIn, pressOut, ...props }) => {
-  return <Bare flex {...props} />
-}
+const Bare = ({ Tag = 'div', ...props }) => <Tag {...applyVariants(assembled, props)} />
 
 const Square = props => <Bare three-width three-height {...props} />
 
-const Text = props => <Bare Tag="p" {...props} />
+const Button = $ => <Square use-mouse lightest-round lightest-margin {...useAnimate()} {...$} />
+
+Button.Primary = $ => <Button double-grow lightest-link-border-bottom lightest-alert-border-left {...$} />
 
 const Image = props => <Bare Tag="img" {...props} />
 
-const Button = ({...props}) => {
-  const reaction = useReaction()
-  return <Square
-    lightest-filled-shadow={!reaction.state.pressed}
-    lightest-link-shadow={reaction.state.pressed}
-    lightest-round
-    lightest-margin
-    {...reaction.props}
-    {...props}
-  />
-}
+const Text = props => <Bare Tag="p" {...props} />
+
+const Section = props => <Bare flex {...props} />
 
 const background = { background: ["backgroundColor"] }
+
 const constraints = [ values.dimension, values.pallete, background ]
-const samples = generate({constraints})
+
+const samples = generate({ constraints })
+
+const pallete = Object.keys(values.pallete)
+
+const track = index => pallete.length * index
+
+const samplesTrack = index => Object.keys(samples).slice(track(index), track(index + 1))
 
 export default () => {
   return <Section vertical>
@@ -113,22 +135,11 @@ export default () => {
     </Section>
     <Section wrap horizontal justify-center flow-vertical>
       {
-        Object.keys(values.pallete).map((pallete, index) => (
-          <Section key={String.fromCharCode(65+index)}>
-            {
-              Object.keys(samples).slice(
-                Object.keys(values.pallete).length*index,
-                (index+1)*Object.keys(values.pallete).length
-              ).map(sample => (
-                <Button
-                  key={sample}
-                  double-grow
-                  lightest-link-border-bottom
-                  lightest-alert-border-left
-                  {...{[sample]: true}}
-                />
-              ))
-            }
+        pallete.map((_, index) => (
+          <Section key={String.fromCharCode(65 + index)}>
+            {samplesTrack(index).map(sample => (
+              <Button.Primary key={sample} {...{ [sample]: true }} />
+            ))}
           </Section>
         ))
       }
