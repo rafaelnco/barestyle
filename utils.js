@@ -1,9 +1,32 @@
 
+
 function identify() {
   let native = false
   try { native = !!require("react-native") } catch (e) {}
   return { native, web: !native }
 }
+
+const isString = unknown => typeof unknown === "string";
+
+const isFunction = unknown => typeof unknown === "function";
+
+const isObject = unknown => unknown && typeof unknown === "object";
+
+const combine = (accumulated, actual) => {
+  const assign = property => {
+    const totalValue = accumulated[property];
+    const actualValue = actual[property];
+    if (Array.isArray(totalValue) && Array.isArray(actualValue)) {
+      accumulated[property] = totalValue.concat(...actualValue);
+    } else if (isObject(totalValue) && isObject(actualValue)) {
+      accumulated[property] = merge(totalValue, actualValue);
+    } else accumulated[property] = actualValue;
+  }
+  Object.keys(actual).forEach(assign);
+  return accumulated;
+}
+
+const merge = (...objects) => objects.reduce(combine, {});
 
 function arraysEqual(_a, _b) {
   const a = _a.sort();
@@ -17,16 +40,13 @@ function arraysEqual(_a, _b) {
   return true;
 }
 
-const valid = value => !!value;
+const valid = actualValue => !!actualValue;
 
-const titleCase = string =>
-  string && `${string[0].toUpperCase()}${string.substr(1).toLowerCase()}`;
+const titleCase = string => string && [string[0].toUpperCase(),string.substr(1)].join("");
 
-const camelCase = parts =>
-  parts
-    .filter(valid)
-    .map((part, index) => (!index ? part.toLowerCase() : titleCase(part)))
-    .join("");
+const applyCamel = (part, index) => (!index ? part.toLowerCase() : titleCase(part))
+
+const camelCase = parts => parts.filter(valid).map(applyCamel).join("");
 
 const paramCase = parts => parts.filter(valid).join("-");
 
@@ -42,9 +62,7 @@ const parseHex = hex => {
   return [red, green, blue, alpha].map(part => Number.parseInt(part, 16));
 };
 
-const toHex = value => value.toString(16).padStart(2, "0");
-const isString = unknown => typeof unknown === "string";
-const isFunction = unknown => typeof unknown === "function";
+const toHex = actualValue => actualValue.toString(16).padStart(2, "0");
 
 export {
   valid,
@@ -57,5 +75,7 @@ export {
   arraysEqual,
   isString,
   isFunction,
-  identify
+  isObject,
+  identify,
+  merge
 };
