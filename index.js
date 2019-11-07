@@ -1,6 +1,6 @@
 import defaults from "./defaults";
 
-import { arraysEqual, isString, isFunction, valid } from "./utils";
+import { arraysEqual, isString, isFunction, isObject, valid } from "./utils";
 
 const optional = variation => ({ "": [""], ...variation });
 
@@ -31,12 +31,16 @@ const transform = (values, types, transformers, property) => {
   const safeRead = value => (isString(value) ? types.string(value) : value);
   const safeValues = Object.assign({}, ...values.map(safeRead));
   const valuesKeys = Object.keys(safeValues);
-  const apply = ({ parameters, transformation }) =>
-    arraysEqual(valuesKeys, parameters) && transformation(safeValues, property);
-  const transformed = transformers(types).map(apply);
-  const result = transformed.filter(valid);
+  const apply = ({ parameters, transformation, type = 'style' }) => {
+    if (!arraysEqual(valuesKeys, parameters)) return
+    const value = transformation(safeValues, property);
+    if (isObject(value)) return { value, type }
+    return { value: { [property.name]: value }, type }
+  }
+  const result = transformers(types).map(apply).filter(valid);
   if (result.length) return result[result.length - 1];
-  return Object.values(safeValues).join(" ");
+  const value = { [property.name]: Object.values(safeValues).join(" ") }
+  return { value, type: 'style' };
 };
 
 const properties = (parts, values = []) => {
@@ -54,12 +58,9 @@ const generate = ({
   types = defaults.types
 }) => {
   const crunch = ({ property, value, variant }) => {
-    const apply = name => {
-      const result = transform(value, types, transformers, { name })
-      if(typeof result === 'object') return result
-      return ({ [name]: result })
-    };
-    const values = Object.assign({}, ...properties(property).map(apply));
+    const apply = name => transform(value, types, transformers, { name });
+    const combine = (acc, { value, type }) => ({ value: { ...acc.value, ...value }, type });
+    const values = properties(property).map(apply).reduce(combine, {})
     const nominate = nominator => ({ [nominator(variant)]: values });
     return Object.assign({}, ...nominators.map(nominate));
   };
@@ -92,17 +93,26 @@ const generator = (proprietary = {}) => {
 };
 
 const applyVariants = (variants, props) => {
-  const style = {};
   const properties = { ...props };
+  const raw = { style: {}, properties: {} }
+  const consume = property => delete properties[property]
   const apply = prop => {
-    if (variants[prop]) {
-      if (props[prop]) Object.assign(style, variants[prop]);
-      delete properties[prop];
+    if (!variants[prop]) return
+    consume(prop)
+    if (!props[prop]) return
+    const { value, type } = variants[prop]
+    const parse = name => {
+      if ( !isFunction(value[name]) ) return ({ [name]: value[name] })
+      if ( value[name].consumer ) value[name].consumer.map(consume)
+      return ({ [name]: value[name]({ ...props, ...raw.properties }, props[prop]) })
     }
+    return !!Object.assign(raw[type], Object.assign({}, ...Object.keys(value).map(parse)));
   };
-  Object.keys(props).forEach(apply);
-  Object.assign(style, props.style);
-  return { ...properties, style };
+  const processed = !!Object.keys(props).filter(apply).length;
+  const style = Object.assign({}, raw.style, props.style);
+  Object.assign(properties, ...Object.values(raw.properties))
+  if (!processed) return { ...properties, style };
+  return applyVariants(variants, { ...properties, style })
 };
 
 const applyAll = (variants, props) => {
@@ -110,4 +120,6 @@ const applyAll = (variants, props) => {
   return Object.assign({}, ...Object.keys(variants).map(apply));
 };
 
-export { defaults, generator, generate, applyVariants, applyAll, optional };
+const assemble = (...variants) => Object.assign({}, ...[ ...variants ].map(Object.values).flat())
+
+export { defaults, generator, generate, applyVariants, applyAll, optional, assemble };
