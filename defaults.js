@@ -6,7 +6,7 @@ import { optional } from "./index";
 const defaults = {
 
   /* nominators combine properties names into a variant name */
-  nominators: [paramCase]
+  nominators: [ paramCase ]
 
 };
 
@@ -14,10 +14,10 @@ const defaults = {
 defaults.types = {
 
   /* root types used in final transformations */
-  unit: value => `${value}rem`,
-  time: value => `${value * 150}ms`,
-  percent: value => `${value * 100}%`,
-  degree: value => `${value * 360}deg`,
+  unit: value => `${ value }rem`,
+  time: value => `${ value * 150 }ms`,
+  percent: value => `${ value * 100 }%`,
+  degree: value => `${ value * 360 }deg`,
 
   /* values declarations too are used as types */
   scale: scale => ({ scale }),
@@ -86,6 +86,9 @@ defaults.values = {
     flex: "flex",
     block: "block",
     cell: "table-cell"
+  },
+  transformScaling: {
+    scale: transform("scale")
   },
   transformPercentile: {
     translate: transform("translate"),
@@ -374,16 +377,20 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
       transformation: ({ transform, percentile }) => `${transform}(${percent(percentile)})`
     },
     {
+      parameters: ["scale", "transform"],
+      transformation: ({ transform, scale }) => `${transform}(${scale})`
+    },
+    {
+      parameters: ["degrees", "transform"],
+      transformation: ({ transform, degrees}) => `${transform}(${degree(degrees)})`
+    },
+    {
       parameters: ["timing", "transition"],
       transformation: ({ timing, transition }) =>
         (Array.isArray(transition)
           ? transition
           : [transition]
         ).map(name => `${name} ${time(timing)}`).join(', ')
-    },
-    {
-      parameters: ["degrees", "transform"],
-      transformation: ({ transform, degrees}) => `${transform}(${degree(degrees)})`
     },
     {
       parameters: ["scale", "color"],
@@ -490,6 +497,7 @@ defaults.variants = ({ rules, values }) => ({
   overflow: [values.overflow, rules.overflow, optional(rules.flowSides)],
   transition: [values.timing, values.transition, rules.transition],
   transformDegree: [values.degrees, values.transformDegree, rules.transform],
+  transformScaling: [values.scaling, values.transformScaling, rules.transform],
   transformPercentile: [values.percentiles, values.transformPercentile, rules.transform],
   spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
   borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)]
