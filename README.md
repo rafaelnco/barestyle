@@ -438,18 +438,8 @@ const Image = props => (
 
 const Path = props => <Bare Tag="path" primary-fill {...props} />;
 
-const Button = ({...props}) => {
-   /* interaction handlers, see barestyle/example */
-  const reaction = useReaction()
-  return <Square
-    lightest-filled-shadow={!reaction.state.pressed}
-    lightest-link-shadow={reaction.state.pressed}
-    lightest-round
-    lightest-margin
-    {...reaction.props}
-    {...props}
-  />
-}
+const Button = props => <Square use-mouse {...props} />
+
 ```
 
 
