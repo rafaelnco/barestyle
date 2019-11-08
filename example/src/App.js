@@ -16,9 +16,9 @@ const variations = generator({
 })
 
 const animate = ({ pressed, hovered, animating }) => <$
-  oneHalf-scale={pressed}
+  soft-scale={pressed}
   twoAHalf-skew={animating}
-  two-scale={hovered}
+  smooth-scale={hovered}
   one-apex={hovered||pressed}
   lightest-filled-shadow={!pressed}
   lightest-link-shadow={pressed}
@@ -101,7 +101,7 @@ const Square = props => <Bare three-width three-height {...props} />
 
 const Button = $ => <Square use-mouse lightest-round lightest-margin {...useAnimate()} {...$} />
 
-Button.Primary = $ => <Button double-grow lightest-link-border-bottom lightest-alert-border-left {...$} />
+Button.Primary = $ => <Button double-grow one-link-border-bottom one-alert-border-left {...$} />
 
 const Image = props => <Bare Tag="img" {...props} />
 
@@ -109,7 +109,7 @@ const Text = props => <Bare Tag="p" {...props} />
 
 const Section = props => <Bare flex {...props} />
 
-const background = { background: ["backgroundColor"] }
+const background = { background: [ "backgroundColor" ] }
 
 const constraints = [ values.dimension, values.pallete, background ]
 
