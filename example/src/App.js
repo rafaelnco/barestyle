@@ -4,7 +4,7 @@ import logo from './logo.svg'
 
 import './App.css';
 
-import { defaults, generator, generate, applyVariants, assemble } from 'barestyle'
+import { $, defaults, generator, generate, applyVariants, assemble } from 'barestyle'
 
 import { paramCase, camelCase } from 'barestyle/utils'
 
@@ -14,8 +14,6 @@ const variations = generator({
   nominators: [ paramCase, camelCase ],
   types: { unit: unit => `${ 2 * unit }rem` }
 })
-
-const $ = $ => $
 
 const animate = ({ pressed, hovered, animating }) => <$
   oneHalf-scale={pressed}
