@@ -122,4 +122,6 @@ const applyAll = (variants, props) => {
 
 const assemble = (...variants) => Object.assign({}, ...[ ...variants ].map(Object.values).flat())
 
-export { defaults, generator, generate, applyVariants, applyAll, optional, assemble };
+const $ = $ => $;
+
+export { $, defaults, generator, generate, applyVariants, applyAll, optional, assemble };
