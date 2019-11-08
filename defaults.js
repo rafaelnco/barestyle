@@ -33,6 +33,7 @@ defaults.types = {
   color: color => ({ color }),
   shadow: shadow => ({ shadow }),
   border: border => ({ border }),
+  borderScale: borderScale => ({ borderScale }),
   timing: timing => ({ timing }),
   degrees: degrees => ({ degrees }),
   spacing: spacing => ({ spacing }),
@@ -51,6 +52,7 @@ defaults.types.font.base = 'dimension'
 defaults.types.color.base = 'dimension'
 defaults.types.shadow.base = 'dimension'
 defaults.types.border.base = 'dimension'
+defaults.types.borderScale.base = 'scaling'
 defaults.types.timing.base = 'dimension'
 defaults.types.spacing.base = 'dimension'
 defaults.types.degrees.base = 'percentiles'
@@ -126,15 +128,19 @@ defaults.values = {
     width: transition("width"),
     height: transition("height"),
     opacity: transition("opacity"),
-    transform: transition("transform"),
     foreground: transition("color"),
+    transform: transition("transform"),
     background: transition("background-color"),
-    theme: transition(["color","background-color"]),
+    theme: transition([ "color", "background-color" ]),
   },
   dimension: {
     lightest: scale(0.2),
     light: scale(0.5),
+    softier: scale(0.75),
+    soft: scale(0.9),
     normal: scale(1),
+    smooth: scale(1.1),
+    smoothier: scale(1.25),
     heavy: scale(1.5),
     heaviest: scale(2)
   },
@@ -418,6 +424,15 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
       })
     },
     {
+      parameters: ["borderScale", "color"],
+      transformation: ({ borderScale, color }, { name }) => Object.assign({
+        [name+'Width']: borderScale,
+        [name+'Color']: color
+      }, web && {
+        [name+'Style']: 'solid',
+      })
+    },
+    {
       parameters: ["shadow"],
       transformation: ({ shadow }) => 
         web && `0 0 ${unit(shadow)} #6666`
@@ -498,9 +513,11 @@ defaults.variants = ({ rules, values }) => ({
   transition: [values.timing, values.transition, rules.transition],
   transformDegree: [values.degrees, values.transformDegree, rules.transform],
   transformScaling: [values.scaling, values.transformScaling, rules.transform],
+  transformDimension: [values.dimension, values.transformScaling, rules.transform],
   transformPercentile: [values.percentiles, values.transformPercentile, rules.transform],
   spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
-  borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)]
+  borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)],
+  bordersScale: [values.borderScale, optional(values.pallete), rules.borders, optional(rules.sides)]
 });
 
 export default defaults;
