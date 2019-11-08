@@ -17,23 +17,23 @@ const variations = generator({
 
 const $ = $ => $
 
-const animate = ({ pressed, hovered, animating }) => (<$
+const animate = ({ pressed, hovered, animating }) => <$
   oneHalf-scale={pressed}
   twoAHalf-skew={animating}
   two-scale={hovered}
   one-apex={hovered||pressed}
   lightest-filled-shadow={!pressed}
   lightest-link-shadow={pressed}
-/>).props
+/>
 
 function useAnimate() {
   const { state, props } = useReaction()
-  return Object.assign({}, animate(state), props)
+  return { ...animate(state).props, ...props }
 }
 
 function useReaction(props, value) {
-  const [state, setState] = useState({})
-  const {pressed, hovered, animating} = state;
+  const [ state, setState ] = useState({})
+  const { pressed, hovered, animating } = state;
   return {
     state,
     props: {
@@ -79,15 +79,15 @@ const hooks = generator({
     }
   },
   rules: {
-    hooks: { use: ["action"] }
+    hooks: { use: [ "action" ] }
   },
   variants: ({ rules, values }) => ({
-    hooks: [rules.hooks, values.hooks]
+    hooks: [ rules.hooks, values.hooks ]
   }),
   transformers: ({ }) => [
     {
       type: 'properties',
-      parameters: ["hook"],
+      parameters: [ "hook" ],
       transformation: ({ hook }) => ({ hook })
     }
   ]
