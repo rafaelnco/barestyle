@@ -441,9 +441,9 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
       })
     },
     {
-      parameters: ["borderScale", "metric", "color"],
-      transformation: ({ borderScale, color, metric }, { name }) => Object.assign({
-        [name+'Width']: borderScale * metric,
+      parameters: ["borderScale", "scale", "color"],
+      transformation: ({ borderScale, color, scale }, { name }) => Object.assign({
+        [name+'Width']: borderScale * scale,
         [name+'Color']: color
       }, web && {
         [name+'Style']: 'solid',
@@ -500,42 +500,101 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
     light-primary-border-top lightest-link-border-vertical ...
 */
 defaults.variants = ({ rules, values }) => ({
+
+  /* full-flex, double-flex, half-flex ... */
   flex: [values.flex, rules.flex],
+
+  /* wrap */
   wrap: [values.wrap, rules.wrap],
+
+  /* one-apex, two-apex, three-apex ... */
   apex: [values.apex, rules.apex],
-  text: [values.text, rules.typography],
+
+  /* justify-between, align-start, justify-end ... */
   layout: [rules.layout, values.layout],
+
+  /* no-events, all-events */
   events: [values.events, rules.events],
+
+  /* pointer-cursor */
   pointer: [values.pointer, rules.cursor],
+
+  /* flex, block, cell */
   display: [values.display, rules.display],
+
+  /* alert-fill, primary-fill, warning-fill ... */
   vectors: [values.pallete, rules.vectors],
-  scaling: [values.scaling, rules.scaling],
-  dropScaling: [values.drop, rules.scaling],
-  position: [values.position, rules.position],
-  typography: [values.font, rules.typography],
+
+  /* half-opacity, full-opacity, tenth-opacity ... */
   opacity: [values.percentiles, rules.opacity],
-  dimension: [values.dimension, rules.scaling],
+
+  /* horizontal, vertical */
   direction: [values.direction, rules.direction],
-  textAlign: [values.textAlign, rules.textAlign],
-  percentile: [values.percentiles, rules.scaling],
+
+  /* no-decoration */
   decoration: [values.decoration, rules.decoration],
-  positioning: [values.percentiles, rules.positioning],
-  borderDecoration: [values.decoration, rules.borders],
-  themesAlpha: [values.percentiles, values.pallete, rules.theme],
+
+  /* light-shadow, heavy-primary-shadow ... */
   shadow: [values.shadow, optional(values.pallete), rules.shadow],
-  spacing: [values.spacing, rules.spacing, optional(rules.sides)],
-  themes: [optional(values.dimension), values.pallete, rules.theme],
+
+  /* light-radius, heavy-radius-horizontal ... */
   corners: [values.dimension, rules.corners, optional(rules.sides)],
+
+  /* flow-vertical, no-flow-horizontal, no-flow ... */
   overflow: [values.overflow, rules.overflow, optional(rules.flowSides)],
+
+  /* light-width-transition, heavy-all-transition... */
   transition: [values.timing, values.transition, rules.transition],
+
+  /* light-link-foreground, heavy-alert-background, warning-foreground, ... */
+  themes: [optional(values.dimension), values.pallete, rules.theme],
+  themesAlpha: [values.percentiles, values.pallete, rules.theme],
+
+  /* full-margin half-padding-vertical tenth-spacing ... */
+  spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
+  spacing: [values.spacing, rules.spacing, optional(rules.sides)],
+
+  /* light-border, heavy-border-horizontal, no-border ... */
+  borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)],
+  borderDecoration: [values.decoration, rules.borders],
+
+  /* fixed, absolute, full-bottom, zero-top, half-left ... */
+  position: [values.position, rules.position],
+  positioning: [values.percentiles, rules.positioning],
+
+  /* center-text, italic-text, light-text, ... */
+  text: [values.text, rules.typography],
+  textAlign: [values.textAlign, rules.textAlign],
+  textTypography: [values.font, rules.typography],
+
+  /* one-width, full-height, half-area, drop-height, ... */
+  scaling: [values.scaling, rules.scaling],
+  scalingDrop: [values.drop, rules.scaling],
+  scalingDimension: [values.dimension, rules.scaling],
+  scalingPercentile: [values.percentiles, rules.scaling],
+
+  /* full-translate double-scale quarter-skew ... */
   transformDegree: [values.degrees, values.transformDegree, rules.transform],
   transformScaling: [values.scaling, values.transformScaling, rules.transform],
   transformDimension: [values.dimension, values.transformScaling, rules.transform],
   transformPercentile: [values.percentiles, values.transformPercentile, rules.transform],
-  spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
-  borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)],
-  bordersScale: [values.borderScale, optional(values.pallete), rules.borders, optional(rules.sides)],
-  bordersMetric: [values.borderScale, values.metric, optional(values.pallete), rules.borders, optional(rules.sides)]
+
+  /* two-alert-border, one-warning-border-vertical ... */
+  bordersScale: [
+    values.borderScale,
+    optional(values.pallete),
+    rules.borders,
+    optional(rules.sides)
+  ],
+
+  /* five-centi-link-border-bottom, two-deca-alert-border-vertical ... */
+  bordersMetric: [
+    values.borderScale,
+    values.metric,
+    optional(values.pallete),
+    rules.borders,
+    optional(rules.sides)
+  ]
 });
 
 export default defaults;
