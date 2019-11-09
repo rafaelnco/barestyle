@@ -144,6 +144,14 @@ defaults.values = {
     heavy: scale(1.5),
     heaviest: scale(2)
   },
+  metric: {
+    kilo: scale(1000),
+    hecto: scale(100),
+    deca: scale(10),
+    deci: scale(0.1),
+    centi: scale(0.01),
+    milli: scale(0.001)
+  },
   scaling: {
     zero: scale(0),
 
@@ -433,6 +441,15 @@ defaults.transformers = ({ unit, degree, percent, time }) => {
       })
     },
     {
+      parameters: ["borderScale", "metric", "color"],
+      transformation: ({ borderScale, color, metric }, { name }) => Object.assign({
+        [name+'Width']: borderScale * metric,
+        [name+'Color']: color
+      }, web && {
+        [name+'Style']: 'solid',
+      })
+    },
+    {
       parameters: ["shadow"],
       transformation: ({ shadow }) => 
         web && `0 0 ${unit(shadow)} #6666`
@@ -517,7 +534,8 @@ defaults.variants = ({ rules, values }) => ({
   transformPercentile: [values.percentiles, values.transformPercentile, rules.transform],
   spacingPercentile: [values.percentiles, rules.spacing, optional(rules.sides)],
   borders: [values.border, optional(values.pallete), rules.borders, optional(rules.sides)],
-  bordersScale: [values.borderScale, optional(values.pallete), rules.borders, optional(rules.sides)]
+  bordersScale: [values.borderScale, optional(values.pallete), rules.borders, optional(rules.sides)],
+  bordersMetric: [values.borderScale, values.metric, optional(values.pallete), rules.borders, optional(rules.sides)]
 });
 
 export default defaults;
