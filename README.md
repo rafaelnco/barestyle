@@ -461,6 +461,7 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.4.0|Complements defaults documentation|Adds metric values, border metric variants|
 1.3.9||Adds scaling transform/border variants|
 1.3.8||Adds fragment|
 1.3.7|Update example with assemble, hooks variants|- Adds scale default variant<br><br>- applyVariants now accept method variants |
