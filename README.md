@@ -450,9 +450,6 @@ const Button = props => <Square use-mouse {...props} />
 
 Deadline|Version|Feature|Purpose
 --|---|---|---
-10/10/19||`full/...(-flex)` single-worded flex variant|Use `full-flex` explicitly
-10/10/19||`dimension-round` variant|More coherently use `dimension-radius`
-
 
 <img src="https://github.com/rafaelnco/barestyle/blob/gh-pages/logo512.png?raw=true" width="10%" style="float: right;">
 
@@ -461,7 +458,7 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
-1.4.1|Updates example to use hooks variants|Actually functional Hooks Variants (check example source)|Removes `full`, `dimension-round` variants
+1.4.1|Updates example to use hooks variants|Actually functional Hooks Variants (check example source)|Removes `full` (Use `full-flex` explicitly), `dimension-round` (More coherently use `dimension-radius`) variants
 1.4.0|Complements defaults documentation|Adds metric values, border metric variants|
 1.3.9||Adds scaling transform/border variants|
 1.3.8||Adds fragment|
