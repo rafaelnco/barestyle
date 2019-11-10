@@ -112,7 +112,7 @@ const applyVariants = (variants, props) => {
   const processed = !!Object.keys(props).filter(apply).length;
   const style = Object.assign({}, raw.style, props.style);
   Object.assign(properties, raw.properties)
-  const merged = merge({ style }, properties)
+  const merged = merge(properties, { style })
   return processed? applyVariants(variants, merged) : merged
 };
 
