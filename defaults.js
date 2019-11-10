@@ -258,7 +258,6 @@ defaults.rules = {
   transition: { transition: ["transition"] },
   decoration: { decoration: ["textDecoration"] },
   corners: {
-    round: ["borderRadius"], /* to be deprecated: 10/10/19 */
     radius: ["borderRadius"] 
   },
   shadow: {
@@ -294,7 +293,6 @@ defaults.rules = {
     horizontal: ["X"]
   },
   flex: {
-    "": ["flex"], /* to be deprecated: 10/10/19 */
     flex: ["flex"],
     grow: ["flexGrow"],
     basis: ["flexBasis"],
