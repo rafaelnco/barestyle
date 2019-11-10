@@ -1,6 +1,6 @@
 import defaults from "./defaults";
 
-import { arraysEqual, isString, isFunction, isObject, valid } from "./utils";
+import { arraysEqual, isString, isFunction, isObject, valid, merge } from "./utils";
 
 const optional = variation => ({ "": [""], ...variation });
 
@@ -104,15 +104,16 @@ const applyVariants = (variants, props) => {
     const parse = name => {
       if ( !isFunction(value[name]) ) return ({ [name]: value[name] })
       if ( value[name].consumer ) value[name].consumer.map(consume)
-      return ({ [name]: value[name]({ ...props, ...raw.properties }, props[prop]) })
+      if(type === 'properties') return value[name]({ ...props, ...raw.properties }, props[prop])
+      return result = ({ [name]: value[name]({ ...props, ...raw.properties }, props[prop]) })
     }
     return !!Object.assign(raw[type], Object.assign({}, ...Object.keys(value).map(parse)));
   };
   const processed = !!Object.keys(props).filter(apply).length;
   const style = Object.assign({}, raw.style, props.style);
-  Object.assign(properties, ...Object.values(raw.properties))
-  if (!processed) return { ...properties, style };
-  return applyVariants(variants, { ...properties, style })
+  Object.assign(properties, raw.properties)
+  const merged = merge({ style }, properties)
+  return processed? applyVariants(variants, merged) : merged
 };
 
 const applyAll = (variants, props) => {
