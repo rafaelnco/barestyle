@@ -461,6 +461,7 @@ Deadline|Version|Feature|Purpose
 
 Version|Documentation|Description|Breaking Change
 -|---|---|---
+1.4.1|Updates example to use hooks variants|Actually functional Hooks Variants (check example source)|Removes `full`, `dimension-round` variants
 1.4.0|Complements defaults documentation|Adds metric values, border metric variants|
 1.3.9||Adds scaling transform/border variants|
 1.3.8||Adds fragment|
