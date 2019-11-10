@@ -11,7 +11,7 @@ import { paramCase, camelCase } from 'barestyle/utils'
 const { values } = defaults
 
 const variations = generator({
-  nominators: [ paramCase, camelCase ],
+  nominators: [ paramCase/* , camelCase */ ],
   types: { unit: unit => `${ 2 * unit }rem` }
 })
 
@@ -99,7 +99,7 @@ const Bare = ({ Tag = 'div', ...props }) => <Tag {...applyVariants(assembled, pr
 
 const Square = props => <Bare three-width three-height {...props} />
 
-const Button = $ => <Square use-mouse lightest-round lightest-margin {...useAnimate()} {...$} />
+const Button = $ => <Square use-animate use-mouse lightest-radius lightest-margin {...$} />
 
 Button.Primary = $ => <Button double-grow one-link-border-bottom one-alert-border-left {...$} />
 
@@ -123,12 +123,12 @@ const samplesTrack = index => Object.keys(samples).slice(track(index), track(ind
 
 export default () => {
   return <Section vertical>
-    <Section lightest-filled-shadow justify-start>
+    <Section light-spacing lightest-filled-shadow justify-start>
       <Section five-height>
         <Image src={logo} full-height/>
       </Section>
-      <Section>
-        <Text primary-foreground heavy-text>Bare Style</Text>
+      <Section horizontal use-animate use-mouse pointer-cursor light-margin light-radius>
+        <Text primary-foreground heavy-text> Bare Style </Text>
       </Section>
     </Section>
     <Section wrap horizontal justify-center flow-vertical>
