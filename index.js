@@ -93,7 +93,7 @@ const generator = (proprietary = {}) => {
 };
 
 const applyVariants = (variants, props) => {
-  const properties = { ...props };
+  const properties = { ...props, style: {} };
   const raw = { style: {}, properties: {} }
   const consume = property => delete properties[property]
   const apply = prop => {
