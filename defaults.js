@@ -258,7 +258,7 @@ defaults.rules = {
   transition: { transition: ["transition"] },
   decoration: { decoration: ["textDecoration"] },
   corners: {
-    radius: ["borderRadius"] 
+    radius: ["Radius"] 
   },
   shadow: {
     shadow: ["boxShadow"],
@@ -305,6 +305,16 @@ defaults.rules = {
     bottom: ["Bottom"],
     vertical: ["Top", "Bottom"],
     horizontal: ["Left", "Right"]
+  },
+  edges: {
+    topLeft: ["TopLeft"],
+    topRight: ["TopRight"],
+    bottomLeft: ["BottomLeft"],
+    bottomRight: ["BottomRight"],
+    top: ["TopLeft", "TopRight"],
+    bottom: ["BottomLeft", "BottomRight"],
+    left: ["TopLeft", "BottomLeft"],
+    right: ["TopRight", "BottomRight"]
   },
   positioning: {
     top: ["top"],
@@ -535,8 +545,8 @@ defaults.variants = ({ rules, values }) => ({
   /* light-shadow, heavy-primary-shadow ... */
   shadow: [values.shadow, optional(values.pallete), rules.shadow],
 
-  /* light-radius, heavy-radius-horizontal ... */
-  corners: [values.dimension, rules.corners, optional(rules.sides)],
+  /* light-radius, heavy-radius-top, light-radius-right ... */
+  corners: [values.dimension, {"":["border"]},optional(rules.edges), rules.corners],
 
   /* flow-vertical, no-flow-horizontal, no-flow ... */
   overflow: [values.overflow, rules.overflow, optional(rules.flowSides)],
